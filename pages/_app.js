@@ -3,7 +3,6 @@ import '../styles/audiobook.css';
 import '../styles/dashboard.css';
 import '../public/assets/fonts/customfont.css';
 import '../public/assets/css/image-slider.css';
-import '../components/userprofile/FileUpload.css';
 import 'slick-carousel/slick/slick.css';
 import "slick-carousel/slick/slick-theme.css";
 import 'remixicon/fonts/remixicon.css';
