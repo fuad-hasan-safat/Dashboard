@@ -23,7 +23,7 @@ const AdminLoginPage = ({url = '/'}) => {
 
   return (
     <>
-      <section className="login__form__sec__wrp clearfix">
+      <section className=" clearfix">
 
         <div className="container">
           <div className="row">
