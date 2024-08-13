@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 3009",
+    "dev": "next dev -p 3004",
     "build": "next build",
-    "start": "NODE_ENV=production pm2 start lekha-poka-ui-beta.js --watch",
+    "start": "NODE_ENV=production pm2 start lekha-poka-ui-cms.js --watch",
     "lint": "next lint"
   },
   "dependencies": {
