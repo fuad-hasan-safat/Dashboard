@@ -1,0 +1,9 @@
+@font-face {
+    font-family: 'LiSirajee';
+    src: url('LiSirajee/LiSirajee.eot');
+    src: url('LiSirajee/LiSirajee.eot') format('embedded-opentype'),
+         url('LiSirajee/LiSirajee.woff2') format('woff2'),
+         url('LiSirajee/LiSirajee.woff') format('woff'),
+         url('LiSirajee/LiSirajee.ttf') format('truetype'),
+         url('LiSirajee/LiSirajee.svg#LiSirajee') format('svg');
+}

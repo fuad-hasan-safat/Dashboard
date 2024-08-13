@@ -1,0 +1,457 @@
+/*
+-----------------------
+hm__audio__book__wrap
+----------------------- 
+*/
+.audio__title {
+    /* position: absolute; */
+    top: 0;
+    left: 0;
+
+    /* width: 100%; */
+    /* padding: 25px 0; */
+
+    /* background-color: #e74c3c; */
+    /* color: black;
+
+    font-family: Gelasio;
+    font-size: 18px; */
+}
+.title_content {
+    display: block;
+    /* Important to give the content a width */
+
+    width: 100%;
+    transform: translateX(-10%);
+    /* Animation start out of the screen */
+
+    /* Add the animation */
+    animation: move 10s linear infinite
+        /* infinite make reapeat the animation indefinitely */
+    ;
+}
+
+.hm__audio__book__sec {
+    padding: 70px 0 0;
+}
+
+.hm__audio__book__wrap {
+    text-align: center;
+}
+
+.audiu__logo a {
+    display: inline-block;
+    vertical-align: baseline;
+    text-decoration: none;
+    max-width: 280px;
+    width: 100%;
+}
+
+.hm__audio__slide__item p {
+    font-size: 20px;
+    line-height: 1.2;
+    color: #061A23;
+    margin-top: 20px;
+    margin-bottom: 30px;
+}
+
+.hm__audio__see__more {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.hm__audio__see__more h3 {
+    font-size: 28px;
+    line-height: 1;
+    color: #5D5A88;
+    font-weight: 600;
+    margin-bottom: 0;
+}
+
+.hm__audio__common__btn {
+    font-size: 16px;
+    line-height: 1;
+    color: #515151;
+    background: #FCD200;
+    border-radius: 4px;
+    padding: 10px 20px;
+    position: relative;
+    overflow: hidden;
+    vertical-align: middle;
+    z-index: 1;
+    -webkit-backface-visibility: hidden;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.hm__audio__common__btn::before {
+    content: '';
+    z-index: -1;
+    position: absolute;
+    top: 50%;
+    left: 100%;
+    margin: -15px 0 0 1px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: #F9A106;
+    -webkit-transform-origin: 100% 50%;
+    transform-origin: 100% 50%;
+    -webkit-transform: scale3d(1, 2, 1);
+    transform: scale3d(1, 2, 1);
+    -webkit-transition: -webkit-transform 0.4s, opacity 0.4s;
+    transition: transform 0.4s, opacity 0.4s;
+    -webkit-transition-timing-function: cubic-bezier(0.7, 0, 0.9, 1);
+    transition-timing-function: cubic-bezier(0.7, 0, 0.9, 1);
+}
+
+.hm__audio__common__btn:hover::before {
+    -webkit-transform: scale3d(8, 8, 1);
+    transform: scale3d(8, 8, 1);
+    transition: all 0.3s;
+    -ms-transition: all 0.3s;
+    -webkit-transition: all 0.3s;
+}
+
+.hm__audio__common__btn:hover {
+    color: #fff;
+}
+
+/*
+-------------------------------
+hm audio recent slide item innr
+-------------------------------
+*/
+.hmCategorySlider,
+.hmRecentSlider {
+    margin: 0 -15px;
+}
+
+.backgroundSlider {
+    margin: 0 -10px 80px;
+}
+
+.hmCategorySlider {
+    margin-bottom: 80px;
+}
+
+.hm__audio__recent__slide__item {
+    padding: 0 15px;
+}
+
+.see__more__list__wrap {
+    margin: 0 -10px;
+    padding-right: 30px;
+}
+
+.see__more__list__wrap .hm__audio__recent__slide__item {
+    width: 33.3333%;
+    padding: 0 10px 20px;
+    float: left;
+    padding-bottom: 20px;
+}
+
+.hm__audio__recent__slide__item__innr {
+    border: 1px solid #D4D2E3;
+    border-radius: 16px;
+    cursor: pointer;
+}
+
+.hm__audio__recent__slide__item__img {
+    width: 100%;
+    height: 196px;
+    border-radius: 16px 16px 0px 0px;
+}
+
+.hm__audio__recent__slide__item__img img {
+    width: 100%;
+    height: 100%;
+    border-radius: 16px 16px 0px 0px;
+    object-fit: cover;
+}
+
+.hm__audio__recent__slide__dsc {
+    padding: 10px 10px;
+    text-align: left;
+}
+
+.hm__audio__recent__slide__dsc h5 {
+    font-size: 16px;
+    line-height: 1;
+    color: #F9A106;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.hm__audio__recent__slide__dsc p {
+    font-size: 10px;
+    line-height: 1;
+    color: #5D5A88;
+    margin-bottom: 8px;
+}
+
+.hm__audio__recent__slide__dsc ul {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.hm__audio__recent__slide__dsc ul li {
+    font-size: 10px;
+    line-height: 1;
+    color: #5D5A88;
+    padding-right: 5px;
+}
+
+/*
+------------------
+ Next Prev Css
+------------------ 
+*/
+.backgroundSlider .slick-prev,
+.backgroundSlider .slick-next,
+.hmCategorySlider .slick-prev,
+.hmCategorySlider .slick-next {
+    width: 30px !important;
+    height: 30px !important;
+}
+
+.hmCategorySlider .slick-prev {
+    left: -25px;
+}
+
+.hmCategorySlider .slick-next {
+    right: -25px;
+}
+
+.backgroundSlider .slick-prev {
+    left: -30px;
+}
+
+.backgroundSlider .slick-next {
+    right: -30px;
+}
+
+.backgroundSlider .slick-prev::before,
+.backgroundSlider .slick-next::before,
+.hmCategorySlider .slick-prev:before,
+.hmCategorySlider .slick-next:before {
+    color: inherit !important;
+    width: 30px !important;
+    height: 30px !important;
+    font-size: 30px !important;
+}
+
+.backgroundSlider .slick-prev::before,
+.hmCategorySlider .slick-prev:before {
+    background-image: url(../public/audioBook/audio-slider/prev-icon.svg);
+    background-repeat: no-repeat;
+    background-size: 30px 30px !important;
+}
+
+.backgroundSlider .slick-next::before,
+.hmCategorySlider .slick-next:before {
+    background-image: url(../public/audioBook/audio-slider/next-icon.svg);
+    background-repeat: no-repeat;
+    background-size: 30px 30px !important;
+}
+
+/*
+-------------------
+Bg Slider Css
+------------------- 
+*/
+.audio__bgslider__text {
+    padding-left: 20px;
+}
+
+.audio__bgslider__text h5 {
+    font-size: 16px;
+    line-height: 1.1;
+    color: #fff;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.audio__bgslider__text p {
+    font-size: 12px;
+    line-height: 1;
+    color: #fff;
+    margin-bottom: 10px;
+}
+
+/*
+--------------------
+ Audio Tabs Css
+-------------------- 
+*/
+.tab-list {
+    display: flex;
+    list-style: none;
+    font-size: 16px;
+    line-height: 1;
+    color: #515151;
+    font-weight: 500;
+    padding: 0;
+    margin: 0;
+}
+
+.audio__tabs__wrap ul li:first-of-type {
+    border-radius: 4px 0px 0px 4px;
+}
+
+.audio__tabs__wrap ul li:last-of-type {
+    border-radius: 0px 8px 8px 0px;
+}
+
+.tabs {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #F9A106;
+    position: relative;
+    cursor: pointer;
+    padding: 14px 20px 10px;
+    font-size: 16px;
+    line-height: 1;
+}
+
+.tabs:not(:last-child) {
+    border-right: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.active-tabs {
+    background: #FCD200;
+    font-weight: 600;
+}
+
+.content {
+    display: none;
+}
+
+.active-content {
+    display: flex;
+}
+
+/*
+---------------------
+ Responsive Css
+--------------------- 
+*/
+
+@media(max-width:1399px) {
+
+    .hmCategorySlider,
+    .hmRecentSlider {
+        margin-left: -10px;
+        margin-right: -10px;
+    }
+
+    .hm__audio__recent__slide__item {
+        padding: 0 10px;
+    }
+
+    .backgroundSlider .slick-next,
+    .hmCategorySlider .slick-next {
+        right: 0;
+        z-index: 999;
+    }
+
+    .backgroundSlider .slick-prev,
+    .hmCategorySlider .slick-prev {
+        left: 0;
+        z-index: 999;
+    }
+}
+
+@media(max-width:1299px) {}
+
+@media(max-width:1199px) {
+    .audio__bgslider__text {
+        padding-left: 10px;
+    }
+}
+
+@media(max-width:991px) {
+    .see__more__list__wrap {
+        padding-right: 0;
+    }
+
+    .hmCategorySlider .slick-next {
+        right: 0;
+        z-index: 999;
+    }
+
+    .hmCategorySlider .slick-prev {
+        left: 0;
+        z-index: 999;
+    }
+
+    .tabs {
+        padding: 10px 8px 8px;
+        font-size: 11px;
+    }
+
+    .audio__tab__content {
+        padding-right: 20px;
+    }
+}
+
+@media(max-width:767px) {
+    .see__more__list__wrap .hm__audio__recent__slide__item {
+        width: 50%;
+    }
+
+    .hmCategorySlider {
+        margin-bottom: 50px;
+    }
+
+    .backgroundSlider {
+        margin: 0 -10px 50px;
+    }
+
+    .audio__tab__content {
+        padding-right: 0;
+    }
+}
+
+@media(max-width:575px) {}
+
+@media(max-width:479px) {
+    .hm__audio__book__sec {
+        padding: 50px 0 0;
+    }
+
+    .audiu__logo a {
+        max-width: 220px;
+        width: 100%;
+    }
+
+    .hm__audio__slide__item p {
+        font-size: 17px;
+        margin-top: 20px;
+        margin-bottom: 25px;
+    }
+
+    .hm__audio__see__more h3 {
+        font-size: 22px;
+    }
+
+    .hm__audio__common__btn {
+        font-size: 14px;
+        padding: 10px 15px;
+    }
+
+    .see__more__list__wrap .hm__audio__recent__slide__item {
+        width: 100%;
+    }
+}
+
+
+
+@keyframes move {
+    to {
+        transform: translateX(-100%);
+    }
+}

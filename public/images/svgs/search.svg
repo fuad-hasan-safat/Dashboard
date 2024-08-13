@@ -1,0 +1,42 @@
+<svg width="57" height="36" viewBox="0 0 57 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <g clip-path="url(#clip0_290_5104)">
+        <g filter="url(#filter0_d_290_5104)">
+            <g clip-path="url(#clip1_290_5104)">
+                <g clip-path="url(#clip2_290_5104)">
+                    <path
+                        d="M28.5 25C32.9183 25 36.5 21.4183 36.5 17C36.5 12.5817 32.9183 9 28.5 9C24.0817 9 20.5 12.5817 20.5 17C20.5 21.4183 24.0817 25 28.5 25Z"
+                        stroke="#ABB7C2" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    <path d="M38.5002 27L34.2002 22.7" stroke="#ABB7C2" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round" />
+                </g>
+            </g>
+        </g>
+    </g>
+    <defs>
+        <filter id="filter0_d_290_5104" x="-8" y="-8" width="73" height="60"
+            filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+            <feFlood flood-opacity="0" result="BackgroundImageFix" />
+            <feColorMatrix in="SourceAlpha" type="matrix"
+                values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha" />
+            <feOffset dy="4" />
+            <feGaussianBlur stdDeviation="6" />
+            <feComposite in2="hardAlpha" operator="out" />
+            <feColorMatrix type="matrix"
+                values="0 0 0 0 0.0509804 0 0 0 0 0.0392157 0 0 0 0 0.172549 0 0 0 0.06 0" />
+            <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_290_5104" />
+            <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_290_5104"
+                result="shape" />
+        </filter>
+        <clipPath id="clip0_290_5104">
+            <rect width="57" height="36" rx="10" fill="white" />
+        </clipPath>
+        <clipPath id="clip1_290_5104">
+            <rect x="4" width="49" height="36" rx="10" fill="white" />
+        </clipPath>
+        <clipPath id="clip2_290_5104">
+            <rect width="21" height="20" fill="white" transform="translate(18 8)" />
+        </clipPath>
+    </defs>
+</svg>
+    
