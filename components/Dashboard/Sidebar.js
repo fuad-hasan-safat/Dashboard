@@ -1,3 +1,4 @@
+'use client'
 import { useRouter } from 'next/router';
 import React, { useContext, useState, useEffect } from 'react';
 import { AdminContext } from '../store/adminpanel-context';
@@ -10,10 +11,13 @@ const Sidebar = () => {
     const [activeMenu, setActiveMenu] = useState(0); // State to track the active menu
     const [openSubMenus, setOpenSubMenus] = useState({ 0: true }); // State to track open sub-menus
 
-    // useEffect(() => {
-    //     // Set Lekhar Poka as active by default on the initial render
-    //     // setCurrentComponentIndex(0, 'Dashboard');
-    // }, []);
+    useEffect(() => {
+        const index = localStorage.getItem('dashboardMenuIndex') || 0 ;
+        const indexVal = localStorage.getItem('dashboardMenuIndexValue') || true ;
+        console.log({index, indexVal})
+        setOpenSubMenus({ [index]: indexVal });
+
+    }, []);
 
     const menuItems = [
         { text: 'Dashboard', icon: 'ri-dashboard-fill', href: '/admin/allposttable' },
