@@ -265,10 +265,17 @@ export default function EditAudioBook() {
             console.log(key, editedEbook[key])
         }
 
+        console.log({editedEbook})
         console.log(`${apiBasePath}/updatebook/${audioData.ebook_id}`)
 
         try {
-            const response = await axios.put(`${apiBasePath}/updatebook/${audioData.ebook_id}`, editedEbook);
+            // const response = await axios.put(`${apiBasePath}/updatebook/${audioData.ebook_id}`, editedEbook);
+
+            const response = await fetch(`${apiBasePath}/updatebook/${audioData.ebook_id}`, {
+                method: 'PUT',
+                body: formData
+            });
+
 
             console.log('Edit book response', response)
             resetEbook();
@@ -286,8 +293,8 @@ export default function EditAudioBook() {
     };
 
 
-    const deleteCoverImage = () =>{
-        setEbook((prevData) =>({
+    const deleteCoverImage = () => {
+        setEbook((prevData) => ({
             ...prevData,
             file: null,
         }))
@@ -423,7 +430,7 @@ export default function EditAudioBook() {
                                         </div>
                                     </>}
 
-                                { ebook.file &&
+                                {ebook.file &&
                                     <div className='relative'>
                                         <label>বর্তমান বইয়ের কভার</label>
                                         <img width={100} src={`${apiBasePath}/${ebook.file.slice(ebook.file.indexOf('/') + 1)}`} />
@@ -515,7 +522,7 @@ export default function EditAudioBook() {
                                 <ColorPicker
                                     color={ebook.color}
                                     theme={themes.dark}
-                                    onChange={(color) => setEbook(prevState => ({ ...prevState, color: color.hex }))}
+                                    onChange={(color) => {setEbook(prevState => ({ ...prevState, color: color.hex })); setEditedEbook(prevState => ({...prevState, color: color.hex}))}}
                                 />
                             </div>
                             <div className='audio__book__input__field'>
@@ -532,7 +539,7 @@ export default function EditAudioBook() {
                                 <label className='mt-[15px]'>সারসংক্ষেপ</label>
                                 <CustomEditor
                                     initialData={ebook.summary}
-                                    setContent={(data) => setEbook(prevState => ({ ...prevState, summary: data }))}
+                                    setContent={(data) => {setEbook(prevState => ({ ...prevState, summary: data })); setEditedEbook(prevState => ({ ...prevState, summary: data }))}}
 
                                 />
                                 {/* <textarea type='text' placeholder='বইয়ের সারসংক্ষেপ' /> */}
@@ -543,7 +550,7 @@ export default function EditAudioBook() {
                                 <label>কলাকুশলী</label>
                                 <CustomEditor
                                     initialData={ebook.info}
-                                    setContent={(data) => setEbook(prevState => ({ ...prevState, info: data }))}
+                                    setContent={(data) => {setEbook(prevState => ({ ...prevState, info: data })); setEditedEbook(prevState => ({ ...prevState, info: data })) }}
                                 />
                                 {/* <textarea type='text' placeholder='info' /> */}
                             </div>
@@ -551,7 +558,7 @@ export default function EditAudioBook() {
                                 <label>লেখকের মন্তব্য</label>
                                 <CustomEditor
                                     initialData={ebook.message}
-                                    setContent={(data) => setEbook(prevState => ({ ...prevState, message: data }))}
+                                    setContent={(data) => { setEbook(prevState => ({ ...prevState, message: data })); setEditedEbook(prevState => ({ ...prevState, message: data })) }}
 
                                 />
                                 {/* <textarea type='text' placeholder='message' /> */}

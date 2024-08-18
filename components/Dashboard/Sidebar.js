@@ -36,7 +36,7 @@ const Sidebar = () => {
         { textA: 'Edit Audio Book', iconA: 'ri-progress-8-fill', href: '' },
         { textA: 'Create Category', iconA: 'ri-progress-8-fill', href: '/admin/allcategory' },
         { textA: 'Create Quote', iconA: 'ri-progress-8-fill', href: '/admin/slider' },
-        { textA: 'Add Audioo', iconA: 'ri-progress-8-fill', href: '/admin/writerlist' },
+        { textA: 'Add Audio', iconA: 'ri-progress-8-fill', href: '/admin/writerlist' },
         { textA: 'Delete Category', iconA: 'ri-progress-8-fill', href: '' },
         { textA: 'Delete Audiobook', iconA: 'ri-progress-8-fill', href: '' },
         
