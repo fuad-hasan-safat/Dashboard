@@ -33,7 +33,7 @@ export default function MyApp({ Component, pageProps }) {
   // /account/signup
   // /account/recoverpassword
   let result = <Layout><Component {...pageProps} /></Layout>
- if (pathname == '/dashboard/dashboard') {
+  if (pathname == '/dashboard/dashboard') {
     result = <LayoutNoSidebar><Component {...pageProps} /></LayoutNoSidebar>
   }
   else if (pathname == "/post/readermood/[slug]") {
@@ -57,13 +57,13 @@ export default function MyApp({ Component, pageProps }) {
         <AudioPlaylistContextProvider>
           <SeeAllSliderContextProvider>
             <SearchContextProvider>
-           <AudioDetailsTabContextProvider>
-              <GoogleOAuthProvider clientId="854926132475-sm4btto49sresu4g5o9qpuk9lgtqor9f.apps.googleusercontent.com">
-                <>
-                  {result}
-                  <AudioPlayer />
-                </>
-              </GoogleOAuthProvider>
+              <AudioDetailsTabContextProvider>
+                <GoogleOAuthProvider clientId="854926132475-sm4btto49sresu4g5o9qpuk9lgtqor9f.apps.googleusercontent.com">
+                  <>
+                    {result}
+                    <AudioPlayer />
+                  </>
+                </GoogleOAuthProvider>
               </AudioDetailsTabContextProvider>
             </SearchContextProvider>
           </SeeAllSliderContextProvider>

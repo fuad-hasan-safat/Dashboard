@@ -49,6 +49,8 @@ const Sidebar = () => {
 
     const toggleSubMenu = (index) => {
         setOpenSubMenus({ [index]: !openSubMenus[index] });
+        localStorage.setItem('dashboardMenuIndex', index);
+        localStorage.setItem('dashboardMenuIndexValue', !openSubMenus[index] );
     };
 
     //Responsive Js

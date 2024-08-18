@@ -27,8 +27,8 @@ export default function AdminContextProvider({ children }) {
     })
 
     useEffect(() => {
-        const currentDashboardIndex = parseInt(localStorage.getItem("dashBordPageIndex"));
-        const currentDashboardPageScope = localStorage.getItem("dashBordPageScope");
+        const currentDashboardIndex = parseInt(localStorage.getItem("dashBordPageIndex")|| 0);
+        const currentDashboardPageScope = localStorage.getItem("dashBordPageScope" || 'Dashboard');
 
         console.log({ currentDashboardIndex, currentDashboardPageScope })
         if (currentDashboardIndex != null) {

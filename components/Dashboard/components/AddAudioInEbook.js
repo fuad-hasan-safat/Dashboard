@@ -67,6 +67,7 @@ export default function AddAudioInEbook() {
             formData.append(key, audioData[key]);
         }
 
+    
 
         try {
             console.log('before add audio api')
@@ -74,7 +75,7 @@ export default function AddAudioInEbook() {
                 method: 'POST',
                 body: formData
             });
-            console.log('after add audio api')
+            console.log('after add audio api', response)
 
 
             if (!response.ok) {
