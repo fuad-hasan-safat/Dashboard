@@ -228,8 +228,10 @@ export default function EditAudioBook() {
             if (value === 'true' || value === 'false') {
                 if (value === 'true') {
                     setEditedEbook(prevState => ({ ...prevState, [name]: true }));
+                    setEbook(prevState => ({ ...prevState, [name]: true }));
                 } else {
                     setEditedEbook(prevState => ({ ...prevState, [name]: false }));
+                    setEbook(prevState => ({ ...prevState, [name]: false }));
                 }
             } else {
                 setEditedEbook(prevState => ({ ...prevState, [name]: value }));
