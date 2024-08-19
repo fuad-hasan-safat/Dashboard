@@ -28,7 +28,7 @@ const Sidebar = () => {
         { text: 'All Profile', icon: 'ri-progress-8-fill', href: '/admin/writerlist' },
         { text: 'Slider List', icon: 'ri-progress-8-fill', href: '/admin/allslidertable' },
         { text: 'Designation List', icon: 'ri-progress-8-fill', href: '/admin/alldesignation' },
-        { text: 'Bio List', icon: 'ri-progress-8-fill', href: '/admin/allWriterBio' },
+        // { text: 'Bio List', icon: 'ri-progress-8-fill', href: '/admin/allWriterBio' },
     ];
 
     const menuItemsAudio = [
