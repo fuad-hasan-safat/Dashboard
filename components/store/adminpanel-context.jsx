@@ -8,10 +8,14 @@ export const AdminContext = createContext({
     editPostid: '',
     isEditpost: false,
     deletePostId: '',
+    quoteId: '',
+    isEditQuote: false,
     setCurrentComponentIndex: () => { },
     setViewPost: () => { },
     setEditPost: () => { },
-    setDeletepostId: () => { }
+    setEditQuote: () => { },
+    setDeletepostId: () => { },
+    setQuotId: () => { },
 });
 
 export default function AdminContextProvider({ children }) {
@@ -22,12 +26,14 @@ export default function AdminContextProvider({ children }) {
         viewPostid: '',
         editPostid: '',
         deletePostId: '',
+        quoteId: '',
+        isEditQuote: false,
         isEditpost: false,
         isViewPost: false,
     })
 
     useEffect(() => {
-        const currentDashboardIndex = parseInt(localStorage.getItem("dashBordPageIndex")|| 0);
+        const currentDashboardIndex = parseInt(localStorage.getItem("dashBordPageIndex") || 0);
         const currentDashboardPageScope = localStorage.getItem("dashBordPageScope" || 'Dashboard');
 
         console.log({ currentDashboardIndex, currentDashboardPageScope })
@@ -52,8 +58,10 @@ export default function AdminContextProvider({ children }) {
             currentPage: page,
             isViewPost: false,
             isEditpost: false,
+            isEditQuote: false,
             viewPostid: '',
             editPostid: '',
+            quoteId:'',
             deletePostId: '',
         }))
 
@@ -75,10 +83,25 @@ export default function AdminContextProvider({ children }) {
         }))
     }
 
+    function setQuotToEdit(id, status = true) {
+        setDashboard((prevdashboard) => ({
+            ...prevdashboard,
+            quoteId: id,
+            isEditQuote: status
+        }))
+    }
+
     function setPostIdToDelete(id) {
         setDashboard((prevdashboard) => ({
             ...prevdashboard,
             deletePostId: id
+        }))
+    }
+
+    function updateQuotId(id) {
+        setDashboard((prevData)=>({
+            ...prevData,
+            quoteId: id
         }))
     }
 
@@ -90,10 +113,13 @@ export default function AdminContextProvider({ children }) {
         editPostid: dashboard.editPostid,
         isEditpost: dashboard.isEditpost,
         deletePostId: dashboard.deletePostId,
+        quoteId: dashboard.quoteId,
         setCurrentComponentIndex: updateCurrentComponentIndex,
         setViewPost: setPostToView,
         setEditPost: setPostToEdit,
-        setDeletepostId: setPostIdToDelete
+        setDeletepostId: setPostIdToDelete,
+        setQuotId: updateQuotId,
+        setEditQuote:setPostIdToDelete
     }
 
     return (

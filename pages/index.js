@@ -24,6 +24,7 @@ import { useRouter } from 'next/router';
 import DialugueModal from '../components/common/notification/DialugueModal';
 import AdminLoginPage from '../components/login/AdminLogin';
 import { apiBasePath } from '../utils/constant';
+import AudioQuoteList from '../components/Dashboard/components/AudioQuoteList';
 
 
 const Home = ({ children }) => {
@@ -166,9 +167,10 @@ const Home = ({ children }) => {
               {currentindex === 9 && <EditAudioBook />}
               {currentindex === 10 && <CreateAudioCategory />}
               {currentindex === 11 && <CreateAudioQuote />}
-              {currentindex === 12 && <AddAudioInEbook />}
-              {currentindex === 13 && <DeleteAudioCategory />}
-              {currentindex === 14 && <DeleteEbookAndAudio />}
+              {currentindex === 12 && <AudioQuoteList />}
+              {currentindex === 13 && <AddAudioInEbook />}
+              {currentindex === 14 && <DeleteAudioCategory />}
+              {currentindex === 15 && <DeleteEbookAndAudio />}
             </div>
           </div>
         </div>

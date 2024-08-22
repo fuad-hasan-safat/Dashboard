@@ -510,6 +510,16 @@ all__page__content__block
 
 /*
 --------------------
+ Audio quote
+-------------------- 
+*/
+.audioQuote table tbody tr td,
+.audioQuote table thead tr th{
+    width: 33.3333% !important;
+}
+
+/*
+--------------------
  all__post__category
 -------------------- 
 */
