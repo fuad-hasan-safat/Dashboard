@@ -166,7 +166,7 @@ const AudioQuoteList = () => {
                       <td>
 
                         {/* <i onClick={()=>setViewPost(post._id, true)} className="ri-eye-fill"></i> */}
-                        <i onClick={()=>setEditQuote(post._id, true) } className="ri-edit-line"></i>
+                        <i onClick={()=>setEditQuote(post._id, true, post.title) } className="ri-edit-line"></i>
                         <i
                           className="ri-delete-bin-6-line"
                           onClick={() => handleDeletePost(post._id)}

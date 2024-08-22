@@ -1,10 +1,16 @@
-import React from 'react'
+import React, { useContext, useState } from 'react'
+import { apiBasePath } from '../../../utils/constant';
+import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { AdminContext } from '../../store/adminpanel-context';
 
 export default function EditQuote() {
     let notification = '';
 
+    const {quoteTitle, quoteId} = useContext(AdminContext);
     const [quote, setQuote] = useState({
-        title: ''
+        title: quoteTitle
     })
     const handleChange = (event) => {
         const { value } = event.target;
@@ -33,7 +39,7 @@ export default function EditQuote() {
         console.log('Submit quote --', quote.title)
 
         try {
-            const response = await axios.post(`${apiBasePath}/createquote`, {
+            const response = await axios.put(`${apiBasePath}/editquote/${quoteId}`, {
                 title: quote.title
             });
 
@@ -75,7 +81,7 @@ export default function EditQuote() {
     <ToastContainer/>
     <form onSubmit={handleSubmit}>
         <div className='audio__book__input__field'>
-            <label>উক্তি লিখুন</label>
+            <label>উক্তি পুনরায় লিখুন</label>
             <input
                 name='title'
                 type='text'
@@ -92,7 +98,7 @@ export default function EditQuote() {
                 type="submit"
                 onClick={handleSubmit}
             >
-                ক্রিয়েট করুন
+                আপডেট করুন
             </button>
         </div>
     </div>

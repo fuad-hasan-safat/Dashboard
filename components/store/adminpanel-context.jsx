@@ -9,6 +9,7 @@ export const AdminContext = createContext({
     isEditpost: false,
     deletePostId: '',
     quoteId: '',
+    quoteTitle:'',
     isEditQuote: false,
     setCurrentComponentIndex: () => { },
     setViewPost: () => { },
@@ -27,6 +28,7 @@ export default function AdminContextProvider({ children }) {
         editPostid: '',
         deletePostId: '',
         quoteId: '',
+        quoteTitle:'',
         isEditQuote: false,
         isEditpost: false,
         isViewPost: false,
@@ -83,11 +85,12 @@ export default function AdminContextProvider({ children }) {
         }))
     }
 
-    function setQuotToEdit(id, status = true) {
+    function setQuotToEdit(id, status = true, title='') {
         setDashboard((prevdashboard) => ({
             ...prevdashboard,
             quoteId: id,
-            isEditQuote: status
+            isEditQuote: status,
+            quoteTitle: title
         }))
     }
 
@@ -112,6 +115,8 @@ export default function AdminContextProvider({ children }) {
         isViewPost: dashboard.isViewPost,
         editPostid: dashboard.editPostid,
         isEditpost: dashboard.isEditpost,
+        isEditQuote: dashboard.isEditQuote,
+        quoteTitle: dashboard.quoteTitle,
         deletePostId: dashboard.deletePostId,
         quoteId: dashboard.quoteId,
         setCurrentComponentIndex: updateCurrentComponentIndex,
@@ -119,7 +124,7 @@ export default function AdminContextProvider({ children }) {
         setEditPost: setPostToEdit,
         setDeletepostId: setPostIdToDelete,
         setQuotId: updateQuotId,
-        setEditQuote:setPostIdToDelete
+        setEditQuote:setQuotToEdit
     }
 
     return (
