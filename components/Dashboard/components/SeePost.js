@@ -48,7 +48,14 @@ export default function PostDetails() {
 
     async function fetchData() {
         console.log('view post in dashboard ', viewPostid)
-        const res = await fetch(`${apiBasePath}/getpost/${viewPostid}`)
+        // const res = await fetch(`${apiBasePath}/getpost/${viewPostid}`)
+        const res = await fetch(`${apiBasePath}/getpost/${viewPostid}`, {
+            method: 'POST', // Use POST method
+            headers: {
+              'Content-Type': 'application/json', // Set the content type to JSON if necessary
+            },
+            // No body data
+          });
         const postData = await res.json()
 
         setPostData((prevPostData) => ({
