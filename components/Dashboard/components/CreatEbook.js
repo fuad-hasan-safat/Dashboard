@@ -1,11 +1,12 @@
 // import { color } from 'jodit/types/plugins/color/color';
+'use client';
 import React, { useEffect, useState } from 'react';
 import ColorPicker, { themes } from 'react-pick-color';
 import dynamic from 'next/dynamic';
 import { apiBasePath } from '../../../utils/constant';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+// import 'react-toastify/dist/ReactToastify.css';
 
 const CustomEditor = dynamic(() => {
     return import('../../custom-editor');

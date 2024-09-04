@@ -6,6 +6,7 @@ import '../public/assets/css/image-slider.css';
 import 'slick-carousel/slick/slick.css';
 import "slick-carousel/slick/slick-theme.css";
 import 'remixicon/fonts/remixicon.css';
+import 'react-toastify/dist/ReactToastify.css';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import Layout from '../components/layout'
 import LayoutNoSidebar from '../components/layoutnosidebar'
