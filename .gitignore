@@ -6,6 +6,12 @@
 .pnp.js
 .lekha-poka-ui.js
 
+/ckeditor5/node_modules
+/ckeditor5/package-lock.json
+
+.ckeditor5/node_modules
+.ckeditor5/package-lock.json
+
 # testing
 /coverage
 
