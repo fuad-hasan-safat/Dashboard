@@ -165,14 +165,14 @@ const AllPostList = () => {
                   <th scope="col">Action</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody className="w-[200px] ">
                 {currentPosts.length > 0 ? (
                   currentPosts.map((post, index) => (
                     <tr key={post._id} className="clearfix">
                       <td>{indexOfFirstPost + index + 1}</td>
-                      <td>{post.title}</td>
+                      <td className="charLim" style={{display: 'inline'}}>{post.title}</td>
                       <td>{post.category}</td>
-                      <td>{post.writer}</td>
+                      <td className="charLim" style={{display: 'inline'}}>{post.writer}</td>
                       <td>
                         <button
                           className={`${
@@ -188,7 +188,7 @@ const AllPostList = () => {
                       <td>
 
                         <i onClick={()=>setViewPost(post._id, true)} className="ri-eye-fill"></i>
-                        <i onClick={()=>setEditPost(post._id, true) } className="ri-edit-line"></i>
+                        {/* <i onClick={()=>setEditPost(post._id, true) } className="ri-edit-line"></i> */}
                         <i
                           className="ri-delete-bin-6-line"
                           onClick={() => handleDeletePost(post._id)}
