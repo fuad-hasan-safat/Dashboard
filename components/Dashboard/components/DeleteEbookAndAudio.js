@@ -16,7 +16,9 @@ export default function DeleteEbookAndAudio() {
         ebookTitle: '',
         deleteType:''   // 'audio' or 'ebook'
     });
-    
+
+    const [audiooDeleted, setAudioDeleted] = useState(0);
+
     const resetAudioData = () => {
         setAudioData({
             file: null,
@@ -31,13 +33,13 @@ export default function DeleteEbookAndAudio() {
 
     useEffect(() => {
         getAudioBookList()
-    }, [])
+    }, [audiooDeleted])
 
     useEffect(() => {
         if (audioData.ebook_id?.length > 0) {
             getAudioList()
         }
-    }, [audioData.ebook_id])
+    }, [audioData.ebook_id, audiooDeleted])
 
 
 
@@ -100,6 +102,7 @@ export default function DeleteEbookAndAudio() {
             .delete(`${apiBasePath}/deleteaudio/${audioData.audioId}`)
             .then((response) => {
                 console.log("Delete successful:", response.data);
+                setAudioDeleted(audiooDeleted + 1);
                 notification = `${audioData.audioTitle} ডিলিট হয়েছে`;
                 notify1();
                 dialogueRef.current.close();
@@ -115,13 +118,14 @@ export default function DeleteEbookAndAudio() {
             .delete(`${apiBasePath}/deletebook/${audioData.ebook_id}`)
             .then((response) => {
                 console.log("Delete successful:", response.data);
-                notification = `${audioData.ebookTitle} ডিলিট হয়েছে`;
+                setAudioDeleted(audiooDeleted+1);
+                notification = `বইটি ডিলিট হয়েছে`;
                 notify1();
                 dialogueRef.current.close();
             })
             .catch((error) => {
                 console.error("Error deleting data:", error);
-                notification = `${audioData.ebookTitle} অডিও ডিলিট হয়নি`;
+                notification = `অডিও বইটি ডিলিট হয়নি`;
                 notify();
             });
         }

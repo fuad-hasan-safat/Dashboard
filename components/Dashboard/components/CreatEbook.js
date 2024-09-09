@@ -24,7 +24,7 @@ function MyAudioUploadForm() {
         writer: '',
         voice: '',
         duration: '',
-        color: '#fff',
+        color: null,
         background: 'no_background',
         category: '',
         mature_content: false,
@@ -43,7 +43,7 @@ function MyAudioUploadForm() {
             writer: '',
             voice: '',
             duration: '',
-            color: '#fff',
+            color: null,
             background: 'no_background',
             category: '',
             mature_content: false,
@@ -116,6 +116,12 @@ function MyAudioUploadForm() {
             notify();
             return
         };
+
+        if(ebook.color === null){
+            notification = "দয়া করে কালার নির্বাচন করুন!" ;
+            notify();
+            return
+        }
 
         setIsLoading(true);
 

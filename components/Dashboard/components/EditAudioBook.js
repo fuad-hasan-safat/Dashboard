@@ -35,7 +35,7 @@ export default function EditAudioBook() {
         writer: '',
         voice: '',
         duration: '',
-        color: '#fff',
+        color: null,
         background: 'no_background',
         category: '',
         mature_content: false,
@@ -54,7 +54,7 @@ export default function EditAudioBook() {
             writer: '',
             voice: '',
             duration: '',
-            color: '#fff',
+            color: null,
             background: 'no_background',
             category: '',
             mature_content: false,
@@ -280,7 +280,7 @@ export default function EditAudioBook() {
 
 
             console.log('Edit book response', response)
-            resetEbook();
+            // resetEbook();
             notification = 'ইবুক সফলভাবে ক্রিয়েট হয়েছে';
             setMessage('Ebook created successfully!');
             notify1();
@@ -356,7 +356,7 @@ export default function EditAudioBook() {
             {isMounted &&
                 <>
                     <form onSubmit={handleSubmit}>
-                        <div className='audio__book__input__fields clearfix mt-[10px]'>
+                        <div className='audio__book__input__fields clearfix mt-[10px] pt-[15px]'>
                             <div className='audio__book__input__field'>
                                 <label>বইয়ের নাম</label>
                                 <input
