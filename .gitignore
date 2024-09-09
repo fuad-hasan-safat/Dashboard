@@ -4,11 +4,7 @@
 /node_modules
 /.pnp
 .pnp.js
-/ckeditor5/node_modules
-/ckeditor5/package-lock.json
 
-.ckeditor5/node_modules
-.ckeditor5/package-lock.json
 
 
 # testing
