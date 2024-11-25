@@ -4,7 +4,6 @@
 /node_modules
 /.pnp
 .pnp.js
-.lekha-poka-ui.js
 
 
 # testing
@@ -34,3 +33,4 @@ yarn-error.log*
 .vercel
 
 .package-lock.json
+/package-lock.json

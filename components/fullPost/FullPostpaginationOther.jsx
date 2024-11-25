@@ -12,7 +12,7 @@ const FullPostPaginationOthers = ({ logText, customclass }) => {
 
   const [currentPage, setCurrentPage] = useState(0);
   const linesPerPage = 60;
-  const logLines = logText?.split('</p>');
+  const logLines = logText?.split(`/</p>| <br>/`);
   const totalLines = logLines?.length;
   const totalPages = Math.ceil(totalLines / linesPerPage);
   const startIndex = currentPage * linesPerPage;

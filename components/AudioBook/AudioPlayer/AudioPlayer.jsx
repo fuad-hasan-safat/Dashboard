@@ -78,7 +78,7 @@ export default function AudioPlayer() {
       audioPlayer.current?.play();
     } else {
       nextSongPlay();
-     
+
     }
   };
 
@@ -137,7 +137,7 @@ export default function AudioPlayer() {
                 </div>
                 <div className="lg:flex lg:flex-col text-gray-600 pt-[5px] pl-[10px]">
                   <div className="pb-[5px] ">
-                    <div className="text-xl font-bold text-left">{currentSong?.title.slice(0,30)}</div>
+                    <div className="text-xl font-bold text-left">{currentSong?.title.slice(0, 30)}</div>
                   </div>
                   <div>
                     <div className="text-left">{currentSong?.writer}</div>
@@ -201,7 +201,7 @@ export default function AudioPlayer() {
                 <button className="">
                   <img src="/images/icons/audioControl.svg"></img>
                 </button> */}
-                
+
                 {/* volume icon */}
                 {!isMute && <img className="cursor-pointer" onClick={() => { setIsMute(true); audioPlayer.current.volume = 0; }} width={30} height={30} src="/images/icons/ic_volumeon.svg"></img>}
                 {isMute && <img className="cursor-pointer" onClick={() => { setIsMute(false); audioPlayer.current.volume = volume }} width={30} height={30} src="/images/icons/ic_volumeoff.svg"></img>}

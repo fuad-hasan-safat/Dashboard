@@ -1,6 +1,6 @@
-// import { color } from 'jodit/types/plugins/color/color';
+
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import ColorPicker, { themes } from 'react-pick-color';
 import dynamic from 'next/dynamic';
 import { apiBasePath } from '../../../utils/constant';
@@ -8,24 +8,66 @@ import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 // import 'react-toastify/dist/ReactToastify.css';
 
-const CustomEditor = dynamic(() => {
-    return import('../../custom-editor');
-}, { ssr: false });
+const JoditEditor = dynamic(() => import('jodit-react'), {
+    ssr: false, // Disable SSR for this component
+});
 
-function MyAudioUploadForm() {
+function MyAudioUploadForm({placeholder=''}) {
     const [message, setMessage] = useState('');
     const [category, setCategory] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
 
     let notification = '';
 
+    const summaryEditor = useRef(null);
+    const infoEditor = useRef(null);
+    const messageEditor = useRef(null);
+
+    const options = [
+        'bold',
+        'italic',
+        'underline',
+        'strikethrough',
+        'center',
+        'left',
+        'right',
+        'justify',
+        'undo',
+        'redo',
+    ];
+
+    const config = useMemo(() => ({
+        buttons: options,
+
+        buttonsMD: options,
+        buttonsSM: options,
+        buttonsXS: options,
+        statusbar: false,
+        toolbarAdaptive: false,
+
+        style: {
+            color: '#737373',
+        },
+
+        readonly: false, // all options from https://xdsoft.net/jodit/docs/,
+
+
+        placeholder: 'লিখুন'
+
+    }),
+        [placeholder]
+    );
+
+
     const [ebook, setEbook] = useState({
         file: null,
+        thumb_image: null,
+        pro_image: null,
         title: '',
         writer: '',
         voice: '',
         duration: '',
-        color: '#fff',
+        color: null,
         background: 'no_background',
         category: '',
         mature_content: false,
@@ -40,11 +82,13 @@ function MyAudioUploadForm() {
     function resetEbook() {
         setEbook({
             file: null,
+            thumb_image: null,
+            pro_image: null,
             title: '',
             writer: '',
             voice: '',
             duration: '',
-            color: '#fff',
+            color: null,
             background: 'no_background',
             category: '',
             mature_content: false,
@@ -81,7 +125,14 @@ function MyAudioUploadForm() {
                 alert('Please select an image file.');
                 return;
             } else {
-                setEbook(prevState => ({ ...prevState, file: selectedFile }));
+                if (name === 'thumb_image') {
+                    setEbook(prevState => ({ ...prevState, thumb_image: selectedFile }));
+                } else if (name === 'pro_image') {
+                    setEbook(prevState => ({ ...prevState, pro_image: selectedFile }));
+                } else {
+                    setEbook(prevState => ({ ...prevState, file: selectedFile }));
+
+                }
             }
         } else if (type === 'radio') {
             if (value === 'true' || value === 'false') {
@@ -101,6 +152,8 @@ function MyAudioUploadForm() {
     const validateFields = () => {
         for (const key in ebook) {
             if (ebook[key] === '' || ebook[key] === null) {
+                notification = `${key} ফিল্ড পূরণ করুন`;
+                notify();
                 setMessage(`Please fill in the ${key} field.`);
                 return false;
             }
@@ -113,10 +166,15 @@ function MyAudioUploadForm() {
         event.preventDefault();
 
         if (!validateFields()) {
-            notification = "সব ফিল্ড পূরণ করুন" ;
-            notify();
+
             return
         };
+
+        if (ebook.color === null) {
+            notification = "দয়া করে কালার নির্বাচন করুন!";
+            notify();
+            return
+        }
 
         setIsLoading(true);
 
@@ -124,6 +182,9 @@ function MyAudioUploadForm() {
         for (const key in ebook) {
             formData.append(key, ebook[key]);
         }
+
+        console.log('ebook -', ebook);
+
 
         try {
             const response = await fetch(`${apiBasePath}/createbook`, {
@@ -144,7 +205,7 @@ function MyAudioUploadForm() {
         } catch (error) {
             console.error('Error:', error);
             setMessage('Error creating ebook');
-            notification = "ইবুক সম্পন্ন হয়নি" ;
+            notification = "ইবুক সম্পন্ন হয়নি";
             notify();
         }
 
@@ -175,7 +236,7 @@ function MyAudioUploadForm() {
 
     return (
         <div className='admin__add__slider__wrap'>
-            <ToastContainer/>
+            <ToastContainer />
             <form onSubmit={handleSubmit}>
                 <div className='audio__book__input__fields clearfix'>
                     <div className='audio__book__input__field'>
@@ -239,6 +300,30 @@ function MyAudioUploadForm() {
                         </select>
                     </div>
 
+                    <div className='admin__input text-black'>
+                        <label>বইয়ের থাম্ব ইমেজ</label>
+                        <div className='audio__file__upload'>
+                            <input
+                                name='thumb_image'
+                                type="file"
+                                accept="image/*"
+                                id="audioFileInput"
+                                onChange={handleChange}
+                            />
+                        </div>
+                    </div>
+                    <div className='admin__input text-black'>
+                        <label>বইয়ের প্রো ইমেজ</label>
+                        <div className='audio__file__upload'>
+                            <input
+                                name='pro_image'
+                                type="file"
+                                accept="image/*"
+                                id="audioFileInput"
+                                onChange={handleChange}
+                            />
+                        </div>
+                    </div>
                     <div className='admin__input text-black'>
                         <label>বইয়ের কভার ইমেজ</label>
                         <div className='audio__file__upload'>
@@ -350,29 +435,45 @@ function MyAudioUploadForm() {
                     </div>
                     <div className='admin__input dashboardCk '>
                         <label className='mt-[15px]'>সারসংক্ষেপ</label>
-                        <CustomEditor
-                            initialData={ebook.summary}
-                            setContent={(data) => setEbook(prevState => ({ ...prevState, summary: data }))}
 
+                        <JoditEditor
+                            ref={summaryEditor}
+                            value={ebook.summary}
+                            config={config}
+                            tabIndex={1} // tabIndex of textarea
+                            onBlur={newContent => setEbook(prevState => ({ ...prevState, summary: newContent }))} // preferred to use only this option to update the content for performance reasons
+                            onChange={newContent => { }}
                         />
+
+
                         {/* <textarea type='text' placeholder='বইয়ের সারসংক্ষেপ' /> */}
                     </div>
                 </div>
                 <div className='audio__book__input__fields clearfix'>
                     <div className='admin__input dashboardCk'>
                         <label>কলাকুশলী</label>
-                        <CustomEditor
-                            initialData={ebook.info}
-                            setContent={(data) => setEbook(prevState => ({ ...prevState, info: data }))}
+
+                        <JoditEditor
+                            ref={infoEditor}
+                            value={ebook.info}
+                            config={config}
+                            tabIndex={1} // tabIndex of textarea
+                            onBlur={newContent => setEbook(prevState => ({ ...prevState, info: newContent }))} // preferred to use only this option to update the content for performance reasons
+                            onChange={newContent => { }}
                         />
+
                         {/* <textarea type='text' placeholder='info' /> */}
                     </div>
                     <div className='admin__input dashboardCk'>
                         <label>লেখকের মন্তব্য</label>
-                        <CustomEditor
-                            initialData={ebook.message}
-                            setContent={(data) => setEbook(prevState => ({ ...prevState, message: data }))}
 
+                        <JoditEditor
+                            ref={messageEditor}
+                            value={ebook.message}
+                            config={config}
+                            tabIndex={1} // tabIndex of textarea
+                            onBlur={newContent => setEbook(prevState => ({ ...prevState, message: newContent }))} // preferred to use only this option to update the content for performance reasons
+                            onChange={newContent => { }}
                         />
                         {/* <textarea type='text' placeholder='message' /> */}
                     </div>

@@ -1,5 +1,5 @@
 'use client'
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { useRouter } from 'next/router';
 import { FileUploader } from "react-drag-drop-files";
 import dynamic from 'next/dynamic';
@@ -9,11 +9,11 @@ import 'react-toastify/dist/ReactToastify.css';
 import { apiBasePath } from '../../../utils/constant';
 import { AdminContext } from '../../store/adminpanel-context';
 
-const CustomEditor = dynamic(() => {
-    return import('../../custom-editor');
-}, { ssr: false });
+const JoditEditor = dynamic(() => import('jodit-react'), {
+    ssr: false, // Disable SSR for this component
+});
 
-export default function EditPost() {
+export default function EditPost({placeholder=""}) {
 
     const { editPostid, setEditPost} = useContext(AdminContext)
     let notification = ''
@@ -243,6 +243,20 @@ export default function EditPost() {
     });
 
 
+    const editor = useRef(null);
+  
+    const config = useMemo(() => ({
+      style: {
+        color: '#737373', // Set your default text color here (e.g., tomato red)
+      },
+      readonly: false, // all options from https://xdsoft.net/jodit/docs/,
+  
+      placeholder: ''
+    }),
+      [placeholder]
+    );
+
+
     return (
         <>
             <div className="lg:pr-6 md:pr-0 sm:pr-0 space-y-4 lg:flex">
@@ -375,6 +389,15 @@ export default function EditPost() {
                         <CustomEditor
                             initialData={content}
                             setContent={setContent}
+                        />
+                        
+                        <JoditEditor
+                            ref={editor}
+                            value={content}
+                            config={config}
+                            tabIndex={1} // tabIndex of textarea
+                            onBlur={newContent => setContent(newContent)} // preferred to use only this option to update the content for performance reasons
+                            onChange={newContent => { }}
                         />
                     </div>
 

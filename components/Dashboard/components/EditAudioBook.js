@@ -1,21 +1,25 @@
-// import { color } from 'jodit/types/plugins/color/color';
+
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import ColorPicker, { themes } from 'react-pick-color';
 import dynamic from 'next/dynamic';
 import { apiBasePath } from '../../../utils/constant';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { data } from 'autoprefixer';
+import Uploading from '../../common/loading';
 
-const CustomEditor = dynamic(() => {
-    return import('../../custom-editor');
-}, { ssr: false });
+const JoditEditor = dynamic(() => import('jodit-react'), {
+    ssr: false, // Disable SSR for this component
+});
 
-export default function EditAudioBook() {
+export default function EditAudioBook({placeholder=""}) {
     const [message, setMessage] = useState('');
     const [category, setCategory] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [isMounted, setIsMounted] = useState(false);
+    const [isAudioUploading, setIsAudioUploading] = useState(false);
     const [audioData, setAudioData] = useState({
         audioId: '',
         audioTitle: '',
@@ -27,14 +31,57 @@ export default function EditAudioBook() {
 
     let notification = '';
 
+
+    const summaryEditor = useRef(null);
+    const infoEditor = useRef(null);
+    const messageEditor = useRef(null);
+
+    const options = [
+        'bold',
+        'italic',
+        'underline',
+        'strikethrough',
+        'center',
+        'left',
+        'right',
+        'justify',
+        'undo',
+        'redo',
+    ];
+
+    const config = useMemo(() => ({
+        buttons: options,
+
+        buttonsMD: options,
+        buttonsSM: options,
+        buttonsXS: options,
+        statusbar: false,
+        toolbarAdaptive: false,
+
+        style: {
+            color: '#737373',
+        },
+
+        readonly: false, // all options from https://xdsoft.net/jodit/docs/,
+
+
+        placeholder: ''
+
+    }),
+        [placeholder]
+    );
+
+
     const [editedEbook, setEditedEbook] = useState({});
     const [ebook, setEbook] = useState({
         file: null,
+        thumb_image: null,
+        pro_image: null,
         title: '',
         writer: '',
         voice: '',
         duration: '',
-        color: '#fff',
+        color: null,
         background: 'no_background',
         category: '',
         mature_content: false,
@@ -49,11 +96,13 @@ export default function EditAudioBook() {
     function resetEbook() {
         setEbook({
             file: null,
+            thumb_image: null,
+            pro_image: null,
             title: '',
             writer: '',
             voice: '',
             duration: '',
-            color: '#fff',
+            color: null,
             background: 'no_background',
             category: '',
             mature_content: false,
@@ -122,7 +171,9 @@ export default function EditAudioBook() {
 
 
             setEbook((prevData) => ({
-                file: result.data.banner_img,
+                file: result?.data?.banner_img ? `${apiBasePath}/${result?.data?.banner_img?.slice(result?.data?.banner_img?.indexOf('/') + 1)}` : null,
+                thumb_image: result?.data?.thumb_image ? `${apiBasePath}/${result?.data?.thumb_image?.slice(result?.data?.thumb_image?.indexOf('/') + 1)}` : null,
+                pro_image: result?.data?.pro_image ? `${apiBasePath}/${result?.data?.pro_image?.slice(result?.data?.pro_image?.indexOf('/') + 1)}` : null,
                 title: result.data.title,
                 writer: result.data.writer,
                 voice: result.data.voice,
@@ -219,7 +270,31 @@ export default function EditAudioBook() {
                 alert('Please select an image file.');
                 return;
             } else {
-                setEditedEbook(prevState => ({ ...prevState, file: selectedFile }));
+                if (name === 'thumb_image') {
+                    setEditedEbook(prevState => ({ ...prevState, thumb_image: selectedFile }));
+                    const file = event.target.files[0];
+                    if (file) {
+                        const url = URL.createObjectURL(file);
+                        setEbook(prevState => ({ ...prevState, thumb_image: url }));
+                    }
+
+                } else if (name === 'pro_image') {
+                    setEditedEbook(prevState => ({ ...prevState, pro_image: selectedFile }));
+                    const file = event.target.files[0];
+                    if (file) {
+                        const url = URL.createObjectURL(file);
+                        setEbook(prevState => ({ ...prevState, pro_image: url }));
+                    }
+
+                } else {
+                    setEditedEbook(prevState => ({ ...prevState, file: selectedFile }));
+                    const file = event.target.files[0];
+                    if (file) {
+                        const url = URL.createObjectURL(file);
+                        setEbook(prevState => ({ ...prevState, file: url }));
+                    }
+
+                }
                 // setEditedEbook(prevState => ({ ...prevState, file: selectedFile }));
 
             }
@@ -227,8 +302,10 @@ export default function EditAudioBook() {
             if (value === 'true' || value === 'false') {
                 if (value === 'true') {
                     setEditedEbook(prevState => ({ ...prevState, [name]: true }));
+                    setEbook(prevState => ({ ...prevState, [name]: true }));
                 } else {
                     setEditedEbook(prevState => ({ ...prevState, [name]: false }));
+                    setEbook(prevState => ({ ...prevState, [name]: false }));
                 }
             } else {
                 setEditedEbook(prevState => ({ ...prevState, [name]: value }));
@@ -245,6 +322,8 @@ export default function EditAudioBook() {
     const validateFields = () => {
         for (const key in ebook) {
             if (ebook[key] === '' || ebook[key] === null) {
+                notification = `${key} ফিল্ড পূরণ করুন`;
+                notify();
                 setMessage(`Please fill in the ${key} field.`);
                 return false;
             }
@@ -255,7 +334,14 @@ export default function EditAudioBook() {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+        console.log("inside Submit book")
 
+
+        if (!validateFields()) {
+            return;
+        }
+
+        console.log("after validation")
 
 
         const formData = new FormData();
@@ -264,35 +350,55 @@ export default function EditAudioBook() {
             console.log(key, editedEbook[key])
         }
 
+        console.log({ editedEbook })
         console.log(`${apiBasePath}/updatebook/${audioData.ebook_id}`)
-
+        setIsAudioUploading(true);
         try {
-            const response = await axios.put(`${apiBasePath}/updatebook/${audioData.ebook_id}`, editedEbook);
+            const response = await axios.put(`${apiBasePath}/updatebook/${audioData.ebook_id}`, formData);
+
+            // const response = await fetch(`${apiBasePath}/updatebook/${audioData.ebook_id}`, {
+            //     method: 'PUT',
+            //     body: formData
+            // });
+
 
             console.log('Edit book response', response)
-            resetEbook();
-            notification = 'ইবুক সফলভাবে ক্রিয়েট হয়েছে';
+            // resetEbook();
+            notification = 'ইবুক সফলভাবে আপডেট হয়েছে';
             setMessage('Ebook created successfully!');
             notify1();
         } catch (error) {
             console.error('Error:', error);
             setMessage('Error creating ebook');
-            notification = "ইবুক সম্পন্ন হয়নি";
+            notification = "ইবুক আপডেট হয়নি";
             notify();
+        } finally {
+            setIsAudioUploading(false);
         }
 
         setIsLoading(false);
     };
 
 
-    const deleteCoverImage = () =>{
-        setEbook((prevData) =>({
+    const deleteCoverImage = () => {
+        setEbook((prevData) => ({
             ...prevData,
             file: null,
         }))
     }
+    const deleteThumbImage = () => {
+        setEbook((prevData) => ({
+            ...prevData,
+            thumb_image: null,
+        }))
+    }
+    const deleteProImage = () => {
+        setEbook((prevData) => ({
+            ...prevData,
+            pro_image: null,
+        }))
+    }
 
-    console.log('ebook data', ebook);
 
     const notify = () => toast.warn(notification, {
         position: "top-center",
@@ -320,10 +426,8 @@ export default function EditAudioBook() {
 
     return (
         <div className='admin__add__slider__wrap'>
-
-
-
             <ToastContainer />
+            {isAudioUploading && <Uploading />}
 
             <div className='admin__input contents audio__book__input__field text-black'>
                 <label>বই নির্বাচন করুন</label>
@@ -346,7 +450,7 @@ export default function EditAudioBook() {
             {isMounted &&
                 <>
                     <form onSubmit={handleSubmit}>
-                        <div className='audio__book__input__fields clearfix mt-[10px]'>
+                        <div className='audio__book__input__fields clearfix mt-[10px] pt-[15px]'>
                             <div className='audio__book__input__field'>
                                 <label>বইয়ের নাম</label>
                                 <input
@@ -408,8 +512,55 @@ export default function EditAudioBook() {
                                 </select>
                             </div>
 
+
                             <div className='admin__input text-black'>
-                                {ebook.file === null &&
+                                {!ebook?.thumb_image &&
+                                    <> <label>বইয়ের থাম্ব ইমেজ</label>
+                                        <div className='audio__file__upload'>
+                                            <input
+                                                name='thumb_image'
+                                                type="file"
+                                                accept="image/*"
+                                                id="audioFileInput"
+                                                onChange={handleChange}
+                                            />
+                                        </div>
+                                    </>}
+
+                                {ebook?.thumb_image &&
+                                    <div className='relative'>
+                                        <label>বর্তমান বইয়ের থাম্ব</label>
+                                        <img width={100} src={`${ebook?.thumb_image}`} />
+                                        <button onClick={deleteThumbImage} className='absolute top-8 left-1 text-white bg-black/60 px-[5px] z-[9999]'><i class="ri-delete-bin-6-fill"></i></button>
+                                    </div>}
+
+                            </div>
+
+                            <div className='admin__input text-black'>
+                                {!ebook?.pro_image &&
+                                    <> <label>বইয়ের প্রো ইমেজ</label>
+                                        <div className='audio__file__upload'>
+                                            <input
+                                                name='pro_image'
+                                                type="file"
+                                                accept="image/*"
+                                                id="audioFileInput"
+                                                onChange={handleChange}
+                                            />
+                                        </div>
+                                    </>}
+
+                                {ebook?.pro_image &&
+                                    <div className='relative'>
+                                        <label>বর্তমান বইয়ের প্রো</label>
+                                        <img width={100} src={`${ebook?.pro_image}`} />
+                                        <button onClick={deleteProImage} className='absolute top-8 left-1 text-white bg-black/60 px-[5px] z-[9999]'><i class="ri-delete-bin-6-fill"></i></button>
+                                    </div>}
+
+                            </div>
+
+                            <div className='admin__input text-black'>
+                                {!ebook.file &&
                                     <> <label>বইয়ের কভার ইমেজ</label>
                                         <div className='audio__file__upload'>
                                             <input
@@ -422,10 +573,10 @@ export default function EditAudioBook() {
                                         </div>
                                     </>}
 
-                                { ebook.file &&
+                                {ebook.file &&
                                     <div className='relative'>
                                         <label>বর্তমান বইয়ের কভার</label>
-                                        <img width={100} src={`${apiBasePath}/${ebook.file.slice(ebook.file.indexOf('/') + 1)}`} />
+                                        <img width={100} src={`${ebook.file}`} />
                                         <button onClick={deleteCoverImage} className='absolute top-8 left-1 text-white bg-black/60 px-[5px] z-[9999]'><i class="ri-delete-bin-6-fill"></i></button>
                                     </div>}
 
@@ -514,7 +665,7 @@ export default function EditAudioBook() {
                                 <ColorPicker
                                     color={ebook.color}
                                     theme={themes.dark}
-                                    onChange={(color) => setEbook(prevState => ({ ...prevState, color: color.hex }))}
+                                    onChange={(color) => { setEbook(prevState => ({ ...prevState, color: color.hex })); setEditedEbook(prevState => ({ ...prevState, color: color.hex })) }}
                                 />
                             </div>
                             <div className='audio__book__input__field'>
@@ -529,10 +680,16 @@ export default function EditAudioBook() {
                             </div>
                             <div className='admin__input dashboardCk '>
                                 <label className='mt-[15px]'>সারসংক্ষেপ</label>
-                                <CustomEditor
-                                    initialData={ebook.summary}
-                                    setContent={(data) => setEbook(prevState => ({ ...prevState, summary: data }))}
 
+                                <JoditEditor
+                                    ref={summaryEditor}
+                                    value={ebook.summary}
+                                    config={config}
+                                    tabIndex={1} // tabIndex of textarea
+                                    onBlur={(newContent) =>{ setEbook(prevState => ({ ...prevState, summary: newContent }));
+                                    setEditedEbook(prevState => ({ ...prevState, summary: newContent }))
+                                }} // preferred to use only this option to update the content for performance reasons
+                                    onChange={newContent => { }}
                                 />
                                 {/* <textarea type='text' placeholder='বইয়ের সারসংক্ষেপ' /> */}
                             </div>
@@ -540,18 +697,30 @@ export default function EditAudioBook() {
                         <div className='audio__book__input__fields clearfix'>
                             <div className='admin__input dashboardCk'>
                                 <label>কলাকুশলী</label>
-                                <CustomEditor
-                                    initialData={ebook.info}
-                                    setContent={(data) => setEbook(prevState => ({ ...prevState, info: data }))}
+                                <JoditEditor
+                                    ref={infoEditor}
+                                    value={ebook.info}
+                                    config={config}
+                                    tabIndex={1} // tabIndex of textarea
+                                    onBlur={(newContent) =>{ setEbook(prevState => ({ ...prevState, info: newContent }));
+                                    setEditedEbook(prevState => ({ ...prevState, info: newContent }))
+                                }} // preferred to use only this option to update the content for performance reasons
+                                    onChange={newContent => { }}
                                 />
                                 {/* <textarea type='text' placeholder='info' /> */}
                             </div>
                             <div className='admin__input dashboardCk'>
                                 <label>লেখকের মন্তব্য</label>
-                                <CustomEditor
-                                    initialData={ebook.message}
-                                    setContent={(data) => setEbook(prevState => ({ ...prevState, message: data }))}
-
+                            
+                                <JoditEditor
+                                    ref={messageEditor}
+                                    value={ebook.message}
+                                    config={config}
+                                    tabIndex={1} // tabIndex of textarea
+                                    onBlur={(newContent) =>{ setEbook(prevState => ({ ...prevState, message: newContent }));
+                                    setEditedEbook(prevState => ({ ...prevState, message: newContent }))
+                                }} // preferred to use only this option to update the content for performance reasons
+                                    onChange={newContent => { }}
                                 />
                                 {/* <textarea type='text' placeholder='message' /> */}
                             </div>
