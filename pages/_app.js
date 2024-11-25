@@ -6,6 +6,7 @@ import '../public/assets/css/image-slider.css';
 import 'slick-carousel/slick/slick.css';
 import "slick-carousel/slick/slick-theme.css";
 import 'remixicon/fonts/remixicon.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-toastify/dist/ReactToastify.css';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import Layout from '../components/layout'
@@ -34,7 +35,7 @@ export default function MyApp({ Component, pageProps }) {
   // /account/signup
   // /account/recoverpassword
   let result = <Layout><Component {...pageProps} /></Layout>
- if (pathname == '/dashboard/dashboard') {
+  if (pathname == '/dashboard/dashboard') {
     result = <LayoutNoSidebar><Component {...pageProps} /></LayoutNoSidebar>
   }
   else if (pathname == "/post/readermood/[slug]") {
@@ -58,13 +59,13 @@ export default function MyApp({ Component, pageProps }) {
         <AudioPlaylistContextProvider>
           <SeeAllSliderContextProvider>
             <SearchContextProvider>
-           <AudioDetailsTabContextProvider>
-              <GoogleOAuthProvider clientId="854926132475-sm4btto49sresu4g5o9qpuk9lgtqor9f.apps.googleusercontent.com">
-                <>
-                  {result}
-                  <AudioPlayer />
-                </>
-              </GoogleOAuthProvider>
+              <AudioDetailsTabContextProvider>
+                <GoogleOAuthProvider clientId="854926132475-sm4btto49sresu4g5o9qpuk9lgtqor9f.apps.googleusercontent.com">
+                  <>
+                    {result}
+                    <AudioPlayer />
+                  </>
+                </GoogleOAuthProvider>
               </AudioDetailsTabContextProvider>
             </SearchContextProvider>
           </SeeAllSliderContextProvider>

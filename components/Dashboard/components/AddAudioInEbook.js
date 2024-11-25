@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { apiBasePath } from '../../../utils/constant';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Uploading from '../../common/loading';
 
 export default function AddAudioInEbook() {
 
@@ -14,10 +15,15 @@ export default function AddAudioInEbook() {
 
     let notification = '';
     const [allBooks, setAllBooks] = useState([]);
+    const [isDataSumbited, setIsDataSubmitted] = useState(1);
+    const [isAudioUploading, setIsAudioUploading] = useState(false);
+
+    const audioFileRef = useRef(null);
+    const imageRef = useRef(null);
 
     useEffect(() => {
         getAudioBookList()
-    }, [])
+    }, [isDataSumbited])
 
 
     const resetAudioData = () => {
@@ -55,26 +61,38 @@ export default function AddAudioInEbook() {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        console.log('Audio file', audioData)
+        console.log('Audio file', audioData.file)
+        console.log(typeof (audioData.file))
+
 
         if (!validateFields()) {
             return
         };
 
         const formData = new FormData();
+
+        for (let file = 0; file < audioData.file.length; file++) {
+            console.log('file ---->', audioData.file[file]);
+            formData.append('file', audioData.file[file]);
+        }
+
         for (const key in audioData) {
-            console.log(key, audioData[key]);
-            formData.append(key, audioData[key]);
+            if (key !== 'file') {
+                console.log(key, audioData[key]);
+                formData.append(key, audioData[key]);
+            }
         }
 
 
+        console.table(formData)
         try {
+            setIsAudioUploading(true);
             console.log('before add audio api')
             const response = await fetch(`${apiBasePath}/addaudio`, {
                 method: 'POST',
                 body: formData
             });
-            console.log('after add audio api')
+            console.log('after add audio api', response)
 
 
             if (!response.ok) {
@@ -84,12 +102,17 @@ export default function AddAudioInEbook() {
             const result = await response.json();
             console.log('Success:', result);
             notification = 'অডিও সফলভাবে যুক্ত হয়েছে';
+            setIsAudioUploading(false)
+            setIsDataSubmitted(isDataSumbited + 1);
+            audioFileRef.current.value = '';
+            imageRef.current.value = '';
             resetAudioData();
             notify1();
         } catch (error) {
             console.error('Error:', error);
             notification = "অডিও সফলভাবে যুক্ত হয়নি";
             notify();
+            setIsAudioUploading(false);
         }
     }
 
@@ -105,11 +128,11 @@ export default function AddAudioInEbook() {
                 }))
             }
             if (name === 'audio') {
-                const selectedFile = files[0];
+                const selectedFile = files;
                 console.log('audio file ---', selectedFile)
                 setAudioData((prevData) => ({
                     ...prevData,
-                    file: selectedFile
+                    file: [...files]
                 }))
             }
         }
@@ -142,9 +165,12 @@ export default function AddAudioInEbook() {
         draggable: true,
     });
 
+
+
     return (
         <div className='admin__add__slider__wrap'>
-            <ToastContainer/>
+            <ToastContainer />
+            {isAudioUploading && <Uploading />}
             <form onSubmit={handleSubmit}>
                 <div className='audio__book__input__fields clearfix'>
                     <div className='admin__input  text-black'>
@@ -153,6 +179,7 @@ export default function AddAudioInEbook() {
                             name='audio'
                             type='file'
                             accept='audio/*'
+                            ref={audioFileRef}
                             multiple
                             onChange={handleChange}
                         />
@@ -165,6 +192,7 @@ export default function AddAudioInEbook() {
                                 name='image'
                                 type="file"
                                 accept="image/*"
+                                ref={imageRef}
                                 id="audioFileInput"
                                 onChange={handleChange}
                             />

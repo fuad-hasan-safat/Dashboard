@@ -118,6 +118,16 @@ hm__audio__book__wrap
     color: #fff;
 }
 
+
+
+.charLim {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  max-width: inherit;
+}
+
+
 /*
 -------------------------------
 hm audio recent slide item innr

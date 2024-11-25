@@ -7,7 +7,7 @@ import { convertToBengaliDate } from '../../utils/convertToBanglaDate'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import DialugueModal from './notification/DialugueModal'
-import Link from 'next/link'
+import div from 'next/link'
 
 export default function UserPostTitleAndcover({
   id,
@@ -161,19 +161,19 @@ export default function UserPostTitleAndcover({
 
         </div>
 
-        <div className="hm__post__profile__grid  relative">
-          <div className="">
-            <h1 className="lg:text-[32] md:text-[25px] sm:text-[23px] xs:text-[14px] leading-7 pr-[40px] text-[#FCD200] font-bold" style={{ lineHeight: '1.2' }}>{shortenTitle}</h1>
+        <div className="hm__post__profile__grid  relative w-[600px] md:w-[600px] xs:w-[200px]" >
+          <div className="" >
+            <h1 className="charLim lg:text-[32] md:text-[25px] sm:text-[23px] xs:text-[14px] leading-7 pr-[40px] text-[#FCD200] font-bold" style={{ lineHeight: '1.6' }}>{shortenTitle}</h1>
           </div>
 
-          <Link className="flex items-center lg:text-[18px] md:text-[16px] sm:text-[14px] xs:text-[12px]  font-semibold text-[#595D5B] " href={writerClickLink} >
+          <div className="flex items-center lg:text-[18px] md:text-[16px] sm:text-[14px] xs:text-[12px]  font-semibold text-[#595D5B] " >
             <span className='inline-block mr-[10px]'>
               <img className="lg:w-[24px] lg:h-[24px] md:w-[22px] md:h-[22px] sm:w-[20px] sm:h-[20px] xs:w-[18px] xs:h-[18px] rounded-full block m-auto shadow-lg" src={writerImage === '' ? defaultBannerImage : `${apiBasePath}/${writerImage?.slice(writerImage.indexOf('/') + 1)}`} alt="" />
             </span>
 
-            <span className='inline-block'> {shortenWriter} </span></Link>
+            <span className='inline-block'> {shortenWriter} </span></div>
           <div className="hm__post__profile__info text-[16px] font-thin leading-1 pt-[5px]">
-            <Link className="flex place-content-start items-center leading-1 lg:text-[16px] md:text-[15px] sm:text-[14px] xs:text-[12px]  text-[#595D5B]" href={writerClickLink} style={{ lineHeight: '1' }} >
+            <div className="flex place-content-start items-center leading-1 lg:text-[16px] md:text-[15px] sm:text-[14px] xs:text-[12px]  text-[#595D5B]"style={{ lineHeight: '1' }} >
 
               {/* {((uploadedBy !== null) && uploadedBy.length > 0) && <> <span className='inline-block mr-[10px]'>
                 <img className="w-[24px] h-[24px] rounded-full block m-auto shadow-lg" src={writerImage === '' ? defaultBannerImage : `${apiBasePath}/${writerImage?.slice(writerImage.indexOf('/') + 1)}`} alt="" />
@@ -188,7 +188,7 @@ export default function UserPostTitleAndcover({
                 <span className='inline-block leading-1 ml-[10px] lg:text-[16px] md:text-[15px] sm:text-[14px] xs:text-[11px] text-[#595D5B]'>
                   {banglaDate}
                 </span></>}
-            </Link>
+            </div>
           </div>
 
           {isProfile &&

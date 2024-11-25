@@ -1,7 +1,7 @@
+'use client'
 import { useRouter } from 'next/router';
 import React, { useContext, useState, useEffect } from 'react';
 import { AdminContext } from '../store/adminpanel-context';
-import { Link } from 'lucide-react';
 
 const Sidebar = () => {
     const router = useRouter();
@@ -10,29 +10,34 @@ const Sidebar = () => {
     const [activeMenu, setActiveMenu] = useState(0); // State to track the active menu
     const [openSubMenus, setOpenSubMenus] = useState({ 0: true }); // State to track open sub-menus
 
-    // useEffect(() => {
-    //     // Set Lekhar Poka as active by default on the initial render
-    //     // setCurrentComponentIndex(0, 'Dashboard');
-    // }, []);
+    useEffect(() => {
+        const index = localStorage.getItem('dashboardMenuIndex') || 0 ;
+        const indexVal = localStorage.getItem('dashboardMenuIndexValue') || true ;
+        console.log({index, indexVal})
+        setOpenSubMenus({ [index]: indexVal });
+
+    }, [currentindex]);
 
     const menuItems = [
         { text: 'Dashboard', icon: 'ri-dashboard-fill', href: '/admin/allposttable' },
         { text: 'All Post', icon: 'ri-progress-8-fill', href: '/admin/allposttable' },
         { text: 'All Category', icon: 'ri-progress-8-fill', href: '/admin/allcategory' },
         { text: 'Create Slider', icon: 'ri-progress-8-fill', href: '/admin/slider' },
-        { text: 'All Writer', icon: 'ri-progress-8-fill', href: '/admin/writerlist' },
+        // { text: 'All Writer', icon: 'ri-progress-8-fill', href: '/admin/writerlist' },
         { text: 'All Profile', icon: 'ri-progress-8-fill', href: '/admin/writerlist' },
         { text: 'Slider List', icon: 'ri-progress-8-fill', href: '/admin/allslidertable' },
         { text: 'Designation List', icon: 'ri-progress-8-fill', href: '/admin/alldesignation' },
-        { text: 'Bio List', icon: 'ri-progress-8-fill', href: '/admin/allWriterBio' },
+        // { text: 'Bio List', icon: 'ri-progress-8-fill', href: '/admin/allWriterBio' },
     ];
 
     const menuItemsAudio = [
         { textA: 'Creat Audio Book', iconA: 'ri-progress-8-fill', href: '' },
         { textA: 'Edit Audio Book', iconA: 'ri-progress-8-fill', href: '' },
         { textA: 'Create Category', iconA: 'ri-progress-8-fill', href: '/admin/allcategory' },
+        { textA: 'Audio Category', iconA: 'ri-progress-8-fill', href: '/admin/allcategory' },
         { textA: 'Create Quote', iconA: 'ri-progress-8-fill', href: '/admin/slider' },
-        { textA: 'Add Audioo', iconA: 'ri-progress-8-fill', href: '/admin/writerlist' },
+        { textA: 'Quote List', iconA: 'ri-progress-8-fill', href: '/admin/slider' },
+        { textA: 'Add Audio', iconA: 'ri-progress-8-fill', href: '/admin/writerlist' },
         { textA: 'Delete Category', iconA: 'ri-progress-8-fill', href: '' },
         { textA: 'Delete Audiobook', iconA: 'ri-progress-8-fill', href: '' },
         
@@ -49,6 +54,8 @@ const Sidebar = () => {
 
     const toggleSubMenu = (index) => {
         setOpenSubMenus({ [index]: !openSubMenus[index] });
+        localStorage.setItem('dashboardMenuIndex', index);
+        localStorage.setItem('dashboardMenuIndexValue', !openSubMenus[index] );
     };
 
     //Responsive Js

@@ -4,7 +4,8 @@ import { useState, useEffect } from 'react';
 import Classes from './slider.module.css';
 import { apiBasePath } from '../../../utils/constant';
 import NotFound from '../../common/nofFound';
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 const CreateSliderPage = () => {
@@ -18,6 +19,8 @@ const CreateSliderPage = () => {
     const [related, setRelated] = useState('');
     const [optionList, setOptionList] = useState([])
     const [userType, setUserType] = useState("");
+
+    let notification = '';
 
 
     useEffect(() => {
@@ -61,6 +64,47 @@ const CreateSliderPage = () => {
 
 
     const saveData = async () => {
+
+
+        if (!imageFile) {
+            notification = "ইমেজ আপলোড করুন!";
+            notify();
+            return;
+        }
+
+        if (title?.trim()?.length <= 0) {
+            notification = "শিরোনাম লিখুন!";
+            notify();
+            return;
+        }
+
+        if (caption?.trim()?.length <= 0) {
+            notification = "লেখক এর নাম লিখুন!";
+            notify();
+            return;
+        }
+
+        if (content?.trim()?.length <= 0) {
+            notification = "সংক্ষিপ্ত বিবরণ লিখুন!";
+            notify();
+            return;
+        }
+
+        if (content?.trim()?.length > 350) {
+            notification = "সংক্ষিপ্ত বিবরণ ৩৫০ ক্যারেক্টার এর লিখুন!";
+            notify();
+            return;
+        }
+
+
+        if (related === '') {
+            notification = "দয়া করে লেখা নির্বাচন করুন!";
+            notify();
+            return;
+        }
+
+
+
         const formData = new FormData();
         formData.append('file', imageFile);
         formData.append('title', title);
@@ -77,11 +121,23 @@ const CreateSliderPage = () => {
 
             if (response.ok) {
                 const data = await response.json();
+                notification = 'স্লাইড ক্রিয়েট হয়েছে';
+                notify1();
+                setImageFile(null);
+                setTitle('');
+                setCaption('');
+                setContent('');
+                setRelated('');
+
             } else {
                 console.error('Failed to update Slider:', response.statusText);
+                notification = 'স্লাইড ক্রিয়েট হয় নি!';
+                notify();
             }
         } catch (error) {
             console.error('Error updating Slider:', error);
+            notification = 'স্লাইড ক্রিয়েট হয় নি!';
+            notify();
         }
     }
 
@@ -100,9 +156,32 @@ const CreateSliderPage = () => {
             reader.readAsDataURL(file);
         }
     };
+
+
+    const notify = () => toast.warn(notification, {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+
+    });
+
+    const notify1 = () => toast.success(notification, {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+
+    });
+
     if (userType === 'admin') {
         return (
             <div className='admin__add__slider__wrap'>
+                <ToastContainer />
                 <div className='admin__upload__wrap'>
                     <div className='profile__image__upload'>
                         <div
@@ -112,7 +191,7 @@ const CreateSliderPage = () => {
                                 e.preventDefault();
                                 e.stopPropagation();
                             }}
-                            onDrop={(e) => handleUpload(e)} className={`${Classes.upload__slider__img}${highlight ? ' is-highlight' : ''}`} style={{ backgroundImage: `url(${preview || '/default-image.jpg'})`,borderRadius:'5px',border:'1px solid#ddd' }}>
+                            onDrop={(e) => handleUpload(e)} className={`${Classes.upload__slider__img}${highlight ? ' is-highlight' : ''}`} style={{ backgroundImage: `url(${preview || '/default-image.jpg'})`, borderRadius: '5px', border: '1px solid#ddd' }}>
                             <form className='my__form'>
                                 <div className='upload__button'>
                                     <input
@@ -130,26 +209,27 @@ const CreateSliderPage = () => {
                         <form onSubmit={handleProfileUpdate}>
                             <div className='admin__input__flds clearfix'>
                                 <div className='admin__input'>
-                                    <label>Title</label>
-                                    <input type='text' value={title} onChange={(e) => setTitle(e.target.value)} placeholder='Title' />
+                                    <label>শিরোনাম</label>
+                                    <input type='text' value={title} onChange={(e) => setTitle(e.target.value)} placeholder='স্লাইড এর শিরোনাম লিখুন...' />
                                 </div>
                                 <div className='admin__input text-black'>
-                                    <label>Post Title</label>
+                                    <label>লেখা নির্বাচন করুন </label>
                                     <select
                                         name="optons" id="options"
                                         onChange={(e) => setRelated(e.target.value)} >
+                                        <option value="">লেখা নির্বাচন করুন</option>
                                         {options}
                                     </select>
                                 </div>
                             </div>
                             <div className='admin__input__flds clearfix'>
                                 <div className='admin__input'>
-                                    <label>Content</label>
-                                    <textarea type='text' value={content} onChange={(e) => setContent(e.target.value)} placeholder='Content' />
+                                    <label>লেখক এর নাম লিখুন</label>
+                                    <textarea type='text' value={caption} onChange={(e) => setCaption(e.target.value)} placeholder='লেখক এর নাম ...' />
                                 </div>
                                 <div className='admin__input'>
-                                    <label>Caption</label>
-                                    <textarea type='text' value={caption} onChange={(e) => setCaption(e.target.value)} placeholder='Caption' />
+                                    <label>সংক্ষিপ্ত বিবরণ</label>
+                                    <textarea type='text' value={content} onChange={(e) => setContent(e.target.value)} placeholder='সংক্ষিপ্ত বিবরণ...' />
                                 </div>
                             </div>
                             <div className='admin__submit clearfix'>

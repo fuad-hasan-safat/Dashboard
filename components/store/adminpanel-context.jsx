@@ -8,10 +8,22 @@ export const AdminContext = createContext({
     editPostid: '',
     isEditpost: false,
     deletePostId: '',
+    quoteId: '',
+    quoteTitle: '',
+    isEditQuote: false,
+    editCategoryId: '',
+    isEditCategory: '',
+    currentDashBoardCliekedCat: null,
+    editCategoryData: {},
     setCurrentComponentIndex: () => { },
     setViewPost: () => { },
     setEditPost: () => { },
-    setDeletepostId: () => { }
+    setEditQuote: () => { },
+    setEditCategory: () => { },
+    setDeletepostId: () => { },
+    setQuotId: () => { },
+    setIsEditCategory: () => { },
+    setCurrentDashBoardCliekedCat: () => { }
 });
 
 export default function AdminContextProvider({ children }) {
@@ -22,13 +34,20 @@ export default function AdminContextProvider({ children }) {
         viewPostid: '',
         editPostid: '',
         deletePostId: '',
+        editCategoryId: '',
+        currentDashBoardCliekedCat: null,
+        editCategoryData: {},
+        quoteId: '',
+        quoteTitle: '',
+        isEditQuote: false,
         isEditpost: false,
         isViewPost: false,
+        isEditCategory: false,
     })
 
     useEffect(() => {
-        const currentDashboardIndex = parseInt(localStorage.getItem("dashBordPageIndex"));
-        const currentDashboardPageScope = localStorage.getItem("dashBordPageScope");
+        const currentDashboardIndex = parseInt(localStorage.getItem("dashBordPageIndex") || 0);
+        const currentDashboardPageScope = localStorage.getItem("dashBordPageScope" || 'Dashboard');
 
         console.log({ currentDashboardIndex, currentDashboardPageScope })
         if (currentDashboardIndex != null) {
@@ -52,9 +71,16 @@ export default function AdminContextProvider({ children }) {
             currentPage: page,
             isViewPost: false,
             isEditpost: false,
+            isEditQuote: false,
+            isEditCategory: false,
             viewPostid: '',
             editPostid: '',
+            quoteId: '',
             deletePostId: '',
+            currentDashboardClickCat: null,
+            editCategoryData: {},
+            editCategoryId: '',
+            quoteTitle: '',
         }))
 
     }
@@ -75,6 +101,15 @@ export default function AdminContextProvider({ children }) {
         }))
     }
 
+    function setQuotToEdit(id, status = true, title = '') {
+        setDashboard((prevdashboard) => ({
+            ...prevdashboard,
+            quoteId: id,
+            isEditQuote: status,
+            quoteTitle: title
+        }))
+    }
+
     function setPostIdToDelete(id) {
         setDashboard((prevdashboard) => ({
             ...prevdashboard,
@@ -82,18 +117,70 @@ export default function AdminContextProvider({ children }) {
         }))
     }
 
+    function updateQuotId(id) {
+        setDashboard((prevData) => ({
+            ...prevData,
+            quoteId: id
+        }))
+    }
+
+    function updateEditCategory(categoryData, state = '') {
+        console.log({ categoryData })
+        setDashboard((prevData) => ({
+            ...prevData,
+            isEditCategory: state,
+            editCategoryId: categoryData?.id,
+            editCategoryData: categoryData
+        }))
+    }
+
+    function resetEditCategory(state = false) {
+        console.log('reset--', state)
+        const currentDashboardIndex = parseInt(localStorage.getItem("dashBordPageIndex") || 0);
+        const currentDashboardPageScope = localStorage.getItem("dashBordPageScope" || 'Dashboard');
+
+        console.log({ currentDashboardIndex, currentDashboardPageScope })
+        setDashboard((prevData) => ({
+            ...prevData,
+            isEditCategory: state
+        }))
+    }
+
+    function updateCurrentDashboardClickCat(cat) {
+        console.log({ cat })
+        setDashboard((prevData) => ({
+            ...prevData,
+            currentDashBoardCliekedCat: cat
+        }))
+
+    }
+
+    
     const cntxtValue = {
+
+        currentDashBoardCliekedCat: dashboard.currentDashBoardCliekedCat,
         currentindex: dashboard.currentindex,
         currentPage: dashboard.currentPage,
         viewPostid: dashboard.viewPostid,
         isViewPost: dashboard.isViewPost,
         editPostid: dashboard.editPostid,
         isEditpost: dashboard.isEditpost,
+        isEditQuote: dashboard.isEditQuote,
+        quoteTitle: dashboard.quoteTitle,
         deletePostId: dashboard.deletePostId,
+        quoteId: dashboard.quoteId,
+        isEditCategory: dashboard.isEditCategory,
+        editCategoryId: dashboard.editCategoryId,
+        editCategoryData: dashboard.editCategoryData,
         setCurrentComponentIndex: updateCurrentComponentIndex,
         setViewPost: setPostToView,
         setEditPost: setPostToEdit,
-        setDeletepostId: setPostIdToDelete
+        setEditCategory: updateEditCategory,
+        setDeletepostId: setPostIdToDelete,
+        setQuotId: updateQuotId,
+        setEditQuote: setQuotToEdit,
+        setIsEditCategory: resetEditCategory,
+        setCurrentDashBoardCliekedCat: updateCurrentDashboardClickCat
     }
 
     return (

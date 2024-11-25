@@ -24,6 +24,8 @@ import { useRouter } from 'next/router';
 import DialugueModal from '../components/common/notification/DialugueModal';
 import AdminLoginPage from '../components/login/AdminLogin';
 import { apiBasePath } from '../utils/constant';
+import AudioQuoteList from '../components/Dashboard/components/AudioQuoteList';
+import AudioCategoryList from '../components/Dashboard/components/AudioCategoryList';
 
 
 const Home = ({ children }) => {
@@ -36,7 +38,7 @@ const Home = ({ children }) => {
   const profileRef = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
   const [isNotifation, setIsNotifation] = useState(false);
-  const [userImage, setUserImage] = useState(null);
+  const [userProfile, setUserProfile] = useState(null);
 
 
   useOutsideNotification(notificationRef);
@@ -44,20 +46,14 @@ const Home = ({ children }) => {
 
   function useOutsideNotification(ref) {
     useEffect(() => {
-      /**
-       * Alert if clicked on outside of element
-       */
+
       function handleClickOutside(event) {
         if (ref.current && !ref.current.contains(event.target)) {
-          // alert("You clicked outside of me!");
           setIsNotifation(false)
-          // setIsSearchbarActive(false)
         }
       }
-      // Bind the event listener
       document.addEventListener("mousedown", handleClickOutside);
       return () => {
-        // Unbind the event listener on clean up
         document.removeEventListener("mousedown", handleClickOutside);
       };
     }, [ref]);
@@ -65,20 +61,14 @@ const Home = ({ children }) => {
 
   function useOutsideProfile(ref) {
     useEffect(() => {
-      /**
-       * Alert if clicked on outside of element
-       */
+
       function handleClickOutside(event) {
         if (ref.current && !ref.current.contains(event.target)) {
-          // alert("You clicked outside of me!");
           setIsOpen(false)
-          // setIsSearchbarActive(false)
         }
       }
-      // Bind the event listener
       document.addEventListener("mousedown", handleClickOutside);
       return () => {
-        // Unbind the event listener on clean up
         document.removeEventListener("mousedown", handleClickOutside);
       };
     }, [ref]);
@@ -101,9 +91,9 @@ const Home = ({ children }) => {
 
     const fetchUserPhoto = async () => {
       try {
-        const response = await fetch(`${apiBasePath}/getprofilepic/${localStorage.getItem("adminuuid")}`);
+        const response = await fetch(`${apiBasePath}/getprofile/${localStorage.getItem("adminuuid")}`);
         const data = await response.json();
-        setUserImage(data.image);
+        setUserProfile(data.object.profile);
         //console.log( "------------------->>>> POST LIST ------------------>>>>>>>",postList );
       } catch (error) {
         // alert("Error Fetching data");
@@ -152,9 +142,9 @@ const Home = ({ children }) => {
                 </ul>
               </div> */}
               <div ref={profileRef} className={`d__account__wrap ${isOpen ? 'open' : ''}`}>
-                <span onClick={toggleMenu}><img src={`${apiBasePath}/${userImage?.slice(userImage?.indexOf('/') + 1)}`} alt='Profile Img' /></span>
+                <span onClick={toggleMenu}><img src={`${apiBasePath}/${userProfile?.image?.slice(userProfile?.image?.indexOf('/') + 1)}`} alt='Profile Img' /></span>
                 <ul>
-                  <li><a href='#'><i class="ri-men-line"></i>{localStorage.getItem('name')}</a></li>
+                  <li><a href='#'><i class="ri-men-line"></i>{userProfile?.name}</a></li>
                   {/* <li><a href='#'><i class="ri-settings-2-line"></i>Setting</a></li> */}
                   <li><a href='#' onClick={Logout}><i class="ri-login-circle-line"></i>Logout</a></li>
                 </ul>
@@ -169,15 +159,17 @@ const Home = ({ children }) => {
               {currentindex === 1 && <AllPostList />}
               {currentindex === 2 && <Allcategory />}
               {currentindex === 3 && <CreateSliderPage />}
-              {currentindex === 4 && <WriterList />}
-              {currentindex === 5 && <AllProfileList />}
-              {currentindex === 6 && <AllSliderList />}
-              {currentindex === 7 && <AllDesignation />}
-              {currentindex === 8 && <AllWriterBio />}
-              {currentindex === 9 && <CreatEbook />}
-              {currentindex === 10 && <EditAudioBook />}
-              {currentindex === 11 && <CreateAudioCategory />}
-              {currentindex === 12 && <CreateAudioQuote />}
+              {/* {currentindex === 4 && <WriterList />} */}
+              {currentindex === 4 && <AllProfileList />}
+              {currentindex === 5 && <AllSliderList />}
+              {currentindex === 6 && <AllDesignation />}
+              {/* {currentindex === 8 && <AllWriterBio />} */}
+              {currentindex === 7 && <CreatEbook />}
+              {currentindex === 8 && <EditAudioBook />}
+              {currentindex === 9 && <CreateAudioCategory />}
+              {currentindex === 10 && <AudioCategoryList/>}
+              {currentindex === 11 && <CreateAudioQuote />}
+              {currentindex === 12 && <AudioQuoteList />}
               {currentindex === 13 && <AddAudioInEbook />}
               {currentindex === 14 && <DeleteAudioCategory />}
               {currentindex === 15 && <DeleteEbookAndAudio />}

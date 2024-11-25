@@ -12,7 +12,7 @@ export default function AllProfileList() {
     const [writerList, setWriterList] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [isMounted, setismounted] = useState(faBedPulse)
-    const [writersPerPage] = useState(20); // Number of writers per page
+    const [writersPerPage] = useState(10); // Number of writers per page
     const [searchTerm, setSearchTerm] = useState(""); // State for search term
     const [selectedWriterId, settSelectedWriterId] = useState(null);
 
@@ -41,7 +41,14 @@ export default function AllProfileList() {
     // Pagination logic
     const indexOfLastWriter = currentPage * writersPerPage;
     const indexOfFirstWriter = indexOfLastWriter - writersPerPage;
+
+    // Filter writers based on search term
+    const filteredWriterList = writerList.filter((writer) =>
+        writer?.name?.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
     const currentWriters = writerList.slice(indexOfFirstWriter, indexOfLastWriter);
+
 
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
@@ -63,10 +70,7 @@ export default function AllProfileList() {
         setCurrentPage(1); // Reset pagination when search term changes
     };
 
-    // Filter writers based on search term
-    const filteredWriterList = writerList.filter((writer) =>
-        writer?.name?.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+
 
     function handleWriterDlete(id) {
         settSelectedWriterId(id);
@@ -75,21 +79,21 @@ export default function AllProfileList() {
 
     const deletSelectedWriter = (id) => {
         setWriterList((prevWriterList) =>
-          prevWriterList.filter((writer) => writer._id !== id)
+            prevWriterList.filter((writer) => writer._id !== id)
         );
-      };
+    };
 
     const deleteData = async (id) => {
         try {
-          const response = await axios.delete(`${apiBasePath}/deletesingleprofile/${id}`);
-          console.log("Delete successful:", response.data);
-          deletSelectedWriter(id);
-          return response.data;
+            const response = await axios.delete(`${apiBasePath}/deletesingleprofile/${id}`);
+            console.log("Delete successful:", response.data);
+            deletSelectedWriter(id);
+            return response.data;
         } catch (error) {
-          console.error("Error deleting data:", error);
-          throw error;
+            console.error("Error deleting data:", error);
+            throw error;
         }
-      };
+    };
 
     const deleteWriter = async () => {
         try {
@@ -129,8 +133,8 @@ export default function AllProfileList() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {filteredWriterList.length > 0 ? (
-                                    filteredWriterList.map((writer, index) => (
+                                {currentWriters.length > 0 ? (
+                                    currentWriters.map((writer, index) => (
                                         <tr key={writer._id} className='clearfix'>
                                             <td>{indexOfFirstWriter + index + 1}</td>
                                             <td>{writer?.name}</td>
