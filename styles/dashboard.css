@@ -257,6 +257,9 @@
     width: 100%;
     text-align: left;
 }
+.d__sidebar__menu ul{
+    padding-left: 0px;
+}
 .d__sidebar__menu ul li button i{
     padding-right: 10px;
 }
@@ -506,6 +509,16 @@ all__page__content__block
 }
 .all__post__search input[type=search]:focus{
     border-color: #F9A106;
+}
+
+/*
+--------------------
+ Audio quote
+-------------------- 
+*/
+.audioQuote table tbody tr td,
+.audioQuote table thead tr th{
+    width: 33.3333% !important;
 }
 
 /*

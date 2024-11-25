@@ -10,13 +10,16 @@ import DialugueModal from "../../common/notification/DialugueModal";
 const AllPostList = () => {
 
   const dialogueRef = useRef();
-  const {setViewPost, isViewPost, setEditPost, isEditpost, setDeletepostId, deletePostId} = useContext(AdminContext);
+  const { setViewPost, isViewPost, setEditPost, isEditpost, setDeletepostId, deletePostId, currentDashBoardCliekedCat, setCurrentDashBoardCliekedCat } = useContext(AdminContext);
   const [userType, setUserType] = useState("");
   const [isLoaded, setIsLoaded] = useState(false);
   const [postList, setPostList] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [postsPerPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState(""); // State for search term
+  const [catSearchTerm, setCatSearchTerm] = useState("");
+  const [statusOfPost, setStatusOfPost] = useState(0)
+  const [isStatusClicked, setIsStatusClicked] = useState(false); // State to check if search is
 
   useEffect(() => {
     setUserType(localStorage.getItem("usertype") || "");
@@ -24,7 +27,13 @@ const AllPostList = () => {
 
   useEffect(() => {
     fetchPostList();
+    if(currentDashBoardCliekedCat){
+      setCatSearchTerm(currentDashBoardCliekedCat);
+      setSearchTerm(currentDashBoardCliekedCat);
+    }
   }, []);
+
+  console.log({ currentDashBoardCliekedCat });
 
   const fetchPostList = () => {
     fetch(`${apiBasePath}/postlist`)
@@ -91,18 +100,51 @@ const AllPostList = () => {
   const indexOfFirstPost = indexOfLastPost - postsPerPage;
 
   // Filter posts based on search term
-  const filteredPosts = postList.filter(
-    (post) =>
-      post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      post.category.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  let filteredPosts = postList.filter((post) => {
+    if (currentDashBoardCliekedCat) {
+      return post.category.toLowerCase().trim() === currentDashBoardCliekedCat.toLowerCase().trim();
+    }
+    return (
+      post.title.toLowerCase().includes(searchTerm.toLowerCase().trim()) ||
+      post.category.toLowerCase().includes(searchTerm.toLowerCase().trim()) ||
+      post.writer.toLowerCase().includes(searchTerm.toLowerCase().trim())
+    );
+  });
+
+  if (statusOfPost === 0) {
+    filteredPosts = postList.filter((post) => {
+      if (currentDashBoardCliekedCat) {
+        return post.category.toLowerCase().trim() === currentDashBoardCliekedCat.toLowerCase().trim();
+      }
+      return (
+        post.title.toLowerCase().includes(searchTerm.toLowerCase().trim()) ||
+        post.category.toLowerCase().includes(searchTerm.toLowerCase().trim()) ||
+        post.writer.toLowerCase().includes(searchTerm.toLowerCase().trim())
+      );
+    });
+  }
+  else if (statusOfPost === 1) {
+    filteredPosts = filteredPosts.filter((post) => post.status === true);
+
+  } else if (statusOfPost === 2) {
+    filteredPosts = filteredPosts.filter((post) => post.status === false);
+
+  }
+
+  // if (currentDashBoardCliekedCat) {
+  //   // setSearchTerm(currentDashBoardCliekedCat);
+  //   filteredPosts = filteredPosts.filter(post => post.category.toLowerCase().trim() === currentDashBoardCliekedCat.toLowerCase().trim())
+
+  // }
 
   const currentPosts = filteredPosts.slice(indexOfFirstPost, indexOfLastPost);
+
+
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   const handleNextPage = () => {
-    if (currentPage < Math.ceil(filteredPosts.length / postsPerPage)) {
+    if (currentPage < Math.ceil(currentPosts.length / postsPerPage)) {
       setCurrentPage((prevPage) => prevPage + 1);
     }
   };
@@ -115,80 +157,111 @@ const AllPostList = () => {
 
   const handleChange = (event) => {
     setSearchTerm(event.target.value);
+    setCurrentDashBoardCliekedCat(null);
     setCurrentPage(1); // Reset pagination when search term changes
   };
 
-  function handleDeletePost(id){
+  function handleDeletePost(id) {
     setDeletepostId(id);
     dialogueRef.current.showModal();
   }
 
+  function statunModalHandler() {
+    setIsStatusClicked(!isStatusClicked);
+  }
+
+  function handleStatusClick(status) {
+    setCurrentDashBoardCliekedCat(null)
+    setStatusOfPost(status); // Set status directly
+    setCurrentPage(1); // Reset pagination when status changes
+  }
+
+
+
+
+
   if (!isLoaded) return null;
 
-  if(isViewPost) {
-    return(
-      <PostDetails/>
+  if (isViewPost) {
+    return (
+      <PostDetails />
     )
   }
 
-  if(isEditpost){
-    return <EditPost/>
+  if (isEditpost) {
+    return <EditPost />
   }
 
   if (userType === "admin") {
+
     return (
       <div className="all__page__content__block clearfix">
-      <DialugueModal ref={dialogueRef} alert='আপনি কি পোস্ট মুছে ফেলতে চান' address={deletePost} type='delete' />
-       <div className="w-full clearfix">
-        <div className="all__post__search">
-          <input
-            type="search"
-            placeholder="Enter Search.."
-            value={searchTerm}
-            onChange={handleChange}
-          />
-          <button>
-            <i className="ri-search-eye-line"></i>
-          </button>
-        </div>
+        <DialugueModal ref={dialogueRef} alert='আপনি কি পোস্ট মুছে ফেলতে চান' address={deletePost} type='delete' />
+        <div className="w-full clearfix">
+          <div className="filter_part">
+            {/* {currentDashBoardCliekedCat &&  <div className="text-[22px] text-[#F9A106] font-semibold">{currentDashBoardCliekedCat}</div>} */}
+
+          </div>
+          <div className="all__post__search">
+            <input
+              type="search"
+              placeholder="Enter Search.."
+              value={searchTerm}
+              onChange={handleChange}
+            />
+            <button>
+              <i className="ri-search-eye-line"></i>
+            </button>
+          </div>
         </div>
         <div className="all__post__list__wrap clearfix">
           <div className="all__post__list__overflow">
             <table className="table">
-              <thead>
+              <thead className="">
                 <tr className="clearfix">
                   <th>No</th>
                   <th scope="col">Post Name</th>
                   <th scope="col">Category</th>
                   <th scope="col">Created By</th>
-                  <th scope="col">Status</th>
+                  <th scope="col" className="relative cursor-pointer" onClick={statunModalHandler}>Status  <i class="ri-arrow-down-s-line"></i>
+
+                    {isStatusClicked &&
+                      <div className="absolute left-0 top-[50px] p-[10px] flex flex-col text-black translate-x-[50%] backdrop-filter: blur(12px); bg-slate-100">
+                        <button onClick={() => handleStatusClick(0)} className=" hover:text-orange-500 ">All</button>
+                        <hr></hr>
+                        <button onClick={() => handleStatusClick(1)} className=" hover:text-orange-500 ">Published</button>
+                        <hr></hr>
+                        <button onClick={() => handleStatusClick(2)} className=" hover:text-orange-500">UnPublished</button>
+                      </div>}
+                  </th>
                   <th scope="col">Action</th>
+
                 </tr>
               </thead>
-              <tbody>
+
+              <tbody className="w-[200px] ">
                 {currentPosts.length > 0 ? (
                   currentPosts.map((post, index) => (
                     <tr key={post._id} className="clearfix">
                       <td>{indexOfFirstPost + index + 1}</td>
-                      <td>{post.title}</td>
+                      <td className="charLim" style={{ display: 'inline' }}>{post.title}</td>
                       <td>{post.category}</td>
-                      <td>{post.writer}</td>
+                      <td className="charLim" style={{ display: 'inline' }}>{post.writer}</td>
                       <td>
                         <button
-                          className={`${
-                            post.status ? "text-green-500" : "text-red-500"
-                          }`}
+                          className={`${post.status ? "text-green-500" : "text-red-500"
+                            }`}
                           onClick={() => {
                             revokeStatus(post._id, post.status);
                           }}
                         >
-                          {post.status ? "Revoke Status" : "Give Status"}
+                          {post.status ? "Published" : "Unpublished"}
                         </button>
                       </td>
                       <td>
 
-                        <i onClick={()=>setViewPost(post._id, true)} className="ri-eye-fill"></i>
-                        <i onClick={()=>setEditPost(post._id, true) } className="ri-edit-line"></i>
+                        <i onClick={() => setViewPost(post._id, true)} className="ri-eye-fill"></i>
+                        {/* <i onClick={()=>setEditPost(post._id, true) } className="ri-edit-line"></i> */}
                         <i
                           className="ri-delete-bin-6-line"
                           onClick={() => handleDeletePost(post._id)}
